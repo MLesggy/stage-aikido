@@ -1,0 +1,48 @@
+<div class="nav">
+    <a (click)="authService.logout()" id="disconnect">Déconnexion</a>
+</div>
+
+<div class="page">
+
+    <div class="left-part">
+        <p id="welcome">Bienvenue</p>
+        <div class="edit-links flex-column">
+            <div class="img-container">
+                <img src="./images/mood.png" alt="image">
+            </div>
+            <a (click)="navigateTo('/dashboard/edit-home')">Page d'accueil</a>
+
+            <a (click)="navigateTo('/dashboard/edit-clubs')">Clubs</a>
+
+            <a (click)="navigateTo('/dashboard/edit-milestones')">Parcours</a>
+
+            <a (click)="navigateTo('/dashboard/edit-techniques')">Espace élèves</a>
+
+            <a (click)="navigateTo('/dashboard/edit-links')">Liens</a>
+
+            <a (click)="navigateTo('/dashboard/edit-seminars')">Stages / événements</a>
+
+            <a (click)="navigateTo('/dashboard/home')">Retour au Dashboard</a>
+        </div>
+    </div>
+
+    <div class="middle-part flex-column">
+        <!-- LE CONTENU SPECIFIQUE À CHAQUE PAGE EST INJECTE ICI -->
+        <router-outlet></router-outlet>
+    </div>
+
+    <div class="right-part">
+        <p>Calendrier</p>
+        <div class="seminars-container flex-column">
+            @for(seminar of this.seminarsService.getSeminarsForMonth(this.seminars, currentMonth); track seminar){
+            <div class="seminar-container flex-column">
+                <p>{{seminar.seminar_start_time | date:'d'}}
+                    {{this.seminarsService.getMonthNameFromNumber(currentMonth)}}</p>
+                <p>{{seminar.seminar_start_time | date:'hh:mm'}} | {{seminar.seminar_title}}</p>
+                <p>{{seminar.seminar_address.address_city}}</p>
+            </div>
+            }
+        </div>
+    </div>
+
+</div>

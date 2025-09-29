@@ -1,0 +1,72 @@
+.titleBackground {
+  background-color: #CAC5C5;
+  color:#8B0C0C;
+  border: solid 1px black;
+} 
+
+button {
+  display: flex;
+  justify-content: center;
+  margin: 2dvh 0 2dvh 0;
+}
+
+.toggle-table {
+  width: 15vw;
+}
+
+.red {
+  color : red;
+}
+
+input {
+  accent-color: red;
+  margin: 10px;
+}
+
+h3 {
+  color:#8B0C0C;
+}
+
+#selection-container {
+  display: flex;
+  width: 90dvw;
+  margin: auto;
+  justify-content: space-around;
+  align-items: center;
+  border: solid 3px #8B0C0C;
+  background-color: rgb(248, 245, 245);
+}
+
+#filters-container {
+  display: flex;
+  flex-direction: column;
+  margin: 35px;
+  gap: 10px;
+  padding: 15px;
+}
+
+.kuys-container {
+  margin: auto;
+  width: 90dvw;
+}
+
+mat-grid-tile {
+  border: 1px solid black;
+  text-align: center;
+}
+
+ul, li {
+  list-style-type: none;
+}
+
+a, a:visited {
+ color: inherit;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+p {
+  text-align: center;
+}

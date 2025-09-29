@@ -1,0 +1,31 @@
+@if (authService.isLoggedIn()){
+    <div class="container">
+        <h1>Modification du mail</h1>
+        <form [formGroup]="changeEmailForm" (ngSubmit)="updateEmail()" class="flex-column">
+            <div class="pair flex">
+                <label for="currentEmail">Adresse email actuelle:</label>
+                <input id="currentEmail" formControlName="currentEmail" type="email" readonly>
+            </div>
+            <div class="pair flex">
+                <label for="newEmail">Nouvelle adresse email:</label>
+                <input id="newEmail" formControlName="newEmail" type="email">
+            </div>
+
+            <div class="pair flex">
+                <label for="newEmailConfirm">Confirmez la nouvelle adresse email:</label>
+                <input id="newEmailConfirm" formControlName="newEmailConfirm" type="email">
+            </div>
+
+            <div class="pair flex buttons">
+                <button type="button" (click)="navigateTo('/dashboard/home')">Retour</button>
+                <button type="submit">Enregistrer</button>
+            </div>
+        </form>  
+    </div>
+}  @else {
+    <div class="container">
+        <h1>Accès non autorisé</h1>
+        <p>Vous devez être connecté pour accéder à cette page.</p>
+        <button (click)="navigateTo('/login')">Se connecter</button>
+    </div>
+}

@@ -1,0 +1,71 @@
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    gap: 5dvh;
+}
+
+.delete, .modify, .add {
+    width: 25px;
+    height: 25px;
+}
+
+.delete:hover , .modify:hover, .add:hover {
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    width: 25vw;
+    border: 2px black solid;
+    text-align: center;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+.line {
+    justify-content: space-between;
+}
+
+.edit-icons {
+    justify-content: space-between;
+    gap: 5px;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:visited {
+    color: inherit;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-color: #8B0C0C;
+    text-decoration-thickness: 3px;
+    cursor: pointer;
+}
+
+.size{
+    width: 450px;
+    height: 250px;
+}

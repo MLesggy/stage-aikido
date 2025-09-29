@@ -1,0 +1,18 @@
+<header id="haut-page">
+    @if (authService.isLoggedOut()){
+        <a (click)="navigateTo('login')" id="connexion">Connexion</a>  
+    } @else {
+        <a (click)="authService.logout()" id="connexion">Déconnexion</a>
+    }
+    <div id="image-container">
+        <p>François Pichereau Aïkido</p>
+    </div>
+    <nav>
+        <a (click)="navigateTo('home')">Accueil</a>
+        <a (click)="navigateTo('milestones')">Parcours</a>
+        <a (click)="navigateTo('clubs')">Clubs</a>
+        <a (click)="navigateTo('seminars')">Stages / Evénements</a>
+        <a (click)="navigateTo('techniques')">Espace Elèves</a>
+        <a (click)="navigateTo('links')">Liens</a>
+    </nav>
+</header>

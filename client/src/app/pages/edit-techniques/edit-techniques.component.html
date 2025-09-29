@@ -1,0 +1,383 @@
+@if (authService.isLoggedIn() && techniques && techniques.length > 0 && grades && grades.length > 0 && attackForms && attackForms.length > 0 && workForms && workForms.length > 0){
+    <div class="content flex-column">
+        <h1>Modifications pour la page Espace élèves</h1>
+
+        <a (click)="openSelectModal()">Créer / Modifier / Supprimer</a>
+
+        <div class="tables-container flex-column">
+            <!-- for each grade (5eme kuy, 4eme kuy, ..., Buki Waza) -->
+            @for(grade of grades; track grade.grade_id){
+                <button (click)="toggleTable(grade.grade_id)">Afficher le {{grade.grade_name}}</button>
+                <table id="table-{{grade.grade_id}}">
+                    <thead>
+                        <tr>
+                            <th class="th-technique">Technique</th>
+
+                            <th class="th-official">Officiel</th>
+
+                            <th class="th-work-form">Forme de travail</th>
+
+                            <th class="th-attack-form">Forme d'attaque</th>
+
+                            <th class="th-exams">Examens</th>
+
+                            <th class="th-link">Lien</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- for each technique for this grade -->
+                        @for (technique of this.getTechniquesForKuy(grade.grade_id); track technique.technique_id){
+                            <tr>
+                                <td>{{technique.technique_move}}</td>
+                                <td>{{technique.technique_official === true ? 'Oui' : 'Non'}}</td>
+                                <td>{{technique.work_form_name}}</td>
+                                <td>{{technique.attack_form_name}}</td>
+                                <td>
+                                    @if (technique.dan_grade_ids.length > 0){
+                                        @for(danGradeId of technique.dan_grade_ids; track danGradeId){
+                                            {{danGradeId}}
+                                        }
+                                    } @else {
+                                        <span>N/A</span>
+                                    }
+                                </td>
+                                <td>{{technique.technique_link}}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+}
+
+<!-- Template du formulaire de selection qui sera utilisé dans la modal -->
+<ng-template #selectFormTemplate>
+  <form [formGroup]="selectForm" (ngSubmit)="onSelectSubmit()">
+    <div>
+        <label for="action_select">Selectionner une action:</label>
+        <select formControlName="action_select">
+            <option value="add">Ajouter</option>
+            <option value="modify">Modifier</option>
+            <option value="delete">Supprimer</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="type_select">Selectionner l'objet:</label>
+        <select formControlName="type_select">
+            <option value="attack-form">Forme d'attaque</option>
+            <option value="work-form">Forme de travail</option>
+            <option value="technique">Technique</option>
+        </select>
+    </div>
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="selectForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Template modal attackForm-->
+<ng-template #attackFormTemplate>
+  <form [formGroup]="attackForm" (ngSubmit)="onAttackFormSubmit()">
+    @if(areWeCreating) {
+        <div>
+            <label for="attack-id">ID forme d'attaque</label>
+            <input type="text" class="attack-id" id="attack-id" formControlName="attack_form_id">
+        </div>
+
+        <div>
+            <label for="attack-name">Nom de la forme d'attaque</label>
+            <input type="text" class="attack-name" id="attack-name" formControlName="attack_form_name">
+        </div>
+
+        <div>
+            <label for="attack-dan-1">Requis pour: Shodan</label><br>
+            <input type="checkbox" id="attack-dan-1" name="attack-dan-1" value="attack-dan-1" formControlName="attack_form_dan_1">
+        </div>
+
+        <div>
+            <label for="attack-dan-2">Requis pour: Nidan</label><br>
+            <input type="checkbox" id="attack-dan-2" name="attack-dan-2" value="attack-dan-2" formControlName="attack_form_dan_2">
+        </div>
+
+        <div>
+            <label for="attack-dan-3">Requis pour: Sandan</label><br>
+            <input type="checkbox" id="attack-dan-3" name="attack-dan-3" value="attack-dan-3" formControlName="attack_form_dan_3">
+        </div>
+
+        <div>
+            <label for="attack-dan-4">Requis pour: Yondan</label><br>
+            <input type="checkbox" id="attack-dan-4" name="attack-dan-4" value="attack-dan-4" formControlName="attack_form_dan_4">
+        </div>
+    } @else if (areWeUpdating) {
+        <div>
+            <label for="attack_select">Selectionner la forme d'attaque à modifier:</label>
+            <select formControlName="attack_select" (change)="updateCheckboxesAndName()">
+                @for(attackForm of attackForms; track attackForm.attack_form_id){
+                    <option [ngValue]="attackForm">{{attackForm.attack_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="attack-name">Nom de la forme d'attaque</label>
+            <input type="text" class="attack-name" id="attack-name" formControlName="attack_form_name">
+        </div>
+
+        <div>
+            <label for="attack-dan-1">Requis pour: Shodan</label><br>
+            <input type="checkbox" id="attack-dan-1" formControlName="attack_form_dan_1">
+        </div>
+
+        <div>
+            <label for="attack-dan-2">Requis pour: Nidan</label><br>
+            <input type="checkbox" id="attack-dan-2" formControlName="attack_form_dan_2">
+        </div>
+
+        <div>
+            <label for="attack-dan-3">Requis pour: Sandan</label><br>
+            <input type="checkbox" id="attack-dan-3" formControlName="attack_form_dan_3">
+        </div>
+
+        <div>
+            <label for="attack-dan-4">Requis pour: Yondan</label><br>
+            <input type="checkbox" id="attack-dan-4" formControlName="attack_form_dan_4">
+        </div>
+    } @else if (areWeDeleting) {
+        <div>
+            <label for="attack_select">Selectionner la forme d'attaque à supprimer:</label>
+            <select formControlName="attack_select">
+                @for(attackForm of attackForms; track attackForm.attack_form_id){
+                    <option (click)="deleteAttackForm(attackForm.attack_form_id)" value="{{attackForm.attack_form_id}}">{{attackForm.attack_form_name}}</option>
+                }
+            </select>
+        </div>
+    }
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="attackForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<!-- Template modal workForm-->
+<ng-template #workFormTemplate>
+  <form [formGroup]="workForm" (ngSubmit)="onWorkFormSubmit()">
+    @if(areWeCreating) {
+        <div>
+            <label for="work-id">ID forme de travail</label>
+            <input type="text" class="work-id" id="work-id" formControlName="work_form_id">
+        </div>
+
+        <div>
+            <label for="work-name">Nom de la forme de travail</label>
+            <input type="text" class="work-name" id="work-name" formControlName="work_form_name">
+        </div>
+    } @else if (areWeUpdating) {
+        <div>
+            <label for="work_select">Selectionner la forme de travail à modifier:</label>
+            <select formControlName="work_select">
+                @for(workForm of workForms; track workForm.work_form_id){
+                    <option [ngValue]="workForm">{{workForm.work_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="work-name">Nouveau nom de la forme de travail</label>
+            <input type="text" class="work-name" id="work-name" formControlName="work_form_name">
+        </div>
+
+    } @else if (areWeDeleting) {
+        <div>
+            <label for="work_select">Selectionner la forme de travail à supprimer:</label>
+            <select formControlName="work_select">
+                @for(workForm of workForms; track workForm.work_form_id){
+                    <option (click)="deleteWorkForm(workForm.work_form_id)" value="{{workForm.work_form_id}}">{{workForm.work_form_name}}</option>
+                }
+            </select>
+        </div>
+    }
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="workForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+
+
+<!-- <a href="">Ajouter une technique</a><br> -->
+<ng-template #techniqueFormTemplate>
+  <form [formGroup]="techniqueForm" (ngSubmit)="onTechniqueSubmit()"> 
+    @if(areWeCreating) {
+        <div>
+            <label for="technique-move">Nom</label>
+            <input type="text" class="technique-move" id="technique-move" formControlName="technique_move">
+        </div>
+
+        <div>
+            <label for="technique-link">Lien video</label>
+            <input type="text" class="technique-link" id="technique-link" formControlName="technique_link">
+        </div>
+
+        <div>
+            <label for="technique-official">Technique officielle:</label>
+            <select formControlName="technique_official">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>            
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-grade">Kuy:</label>
+            <select formControlName="grade_id">
+                @for(grade of grades; track grade.grade_id){
+                    <option value="{{grade.grade_id}}">{{grade.grade_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-work-form">Forme de travail:</label>
+            <select formControlName="work_form_id">
+                @for(workForm of workForms; track workForm.work_form_id){
+                    <option value="{{workForm.work_form_id}}">{{workForm.work_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-attack-form">Forme d'attaque:</label>
+            <select formControlName="attack_form_id">
+                @for(attackForm of attackForms; track attackForm.attack_form_id){
+                    <option value="{{attackForm.attack_form_id}}">{{attackForm.attack_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-dan-1">Requis pour: Shodan</label><br>
+            <input type="checkbox" id="technique-dan-1" name="technique-dan-1" value="technique-dan-1" formControlName="technique_dan_1">
+        </div>
+
+        <div>
+            <label for="technique-dan-2">Requis pour: Nidan</label><br>
+            <input type="checkbox" id="technique-dan-2" name="technique-dan-2" value="technique-dan-2" formControlName="technique_dan_2">
+        </div>
+
+        <div>
+            <label for="technique-dan-3">Requis pour: Sandan</label><br>
+            <input type="checkbox" id="technique-dan-3" name="technique-dan-3" value="technique-dan-3" formControlName="technique_dan_3">
+        </div>
+
+        <div>
+            <label for="technique-dan-4">Requis pour: Yondan</label><br>
+            <input type="checkbox" id="technique-dan-4" name="technique-dan-4" value="technique-dan-4" formControlName="technique_dan_4">
+        </div>
+        
+    } @else if (areWeUpdating) {
+        <div>
+            <label for="technique_select">Selectionner la technique à modifier:</label>
+            <select formControlName="technique_select" (change)="updateCheckboxesAndNameForTechnique()">
+                @for(technique of techniques; track technique.technique_id){
+                    <option [ngValue]="technique">{{technique.technique_wonderfull_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-move">Nom</label>
+            <input type="text" class="technique-move" id="technique-move" formControlName="technique_move">
+        </div>
+
+        <div>
+            <label for="technique-link">Lien video</label>
+            <input type="text" class="technique-link" id="technique-link" formControlName="technique_link">
+        </div>
+
+        <div>
+            <label for="technique-official">Technique officielle:</label>
+            <select formControlName="technique_official">
+                <option value="true">Oui</option>
+                <option value="false">Non</option>            
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-grade">Kuy:</label>
+            <select formControlName="grade_id">
+                @for(grade of grades; track grade.grade_id){
+                    <option value="{{grade.grade_id}}">{{grade.grade_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-work-form">Forme de travail:</label>
+            <select formControlName="work_form_id">
+                @for(workForm of workForms; track workForm.work_form_id){
+                    <option value="{{workForm.work_form_id}}">{{workForm.work_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-attack-form">Forme d'attaque:</label>
+            <select formControlName="attack_form_id">
+                @for(attackForm of attackForms; track attackForm.attack_form_id){
+                    <option value="{{attackForm.attack_form_id}}">{{attackForm.attack_form_name}}</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label for="technique-dan-1">Requis pour: Shodan</label><br>
+            <input type="checkbox" id="technique-dan-1" name="technique-dan-1" value="technique-dan-1" formControlName="technique_dan_1">
+        </div>
+
+        <div>
+            <label for="technique-dan-2">Requis pour: Nidan</label><br>
+            <input type="checkbox" id="technique-dan-2" name="technique-dan-2" value="technique-dan-2" formControlName="technique_dan_2">
+        </div>
+
+        <div>
+            <label for="technique-dan-3">Requis pour: Sandan</label><br>
+            <input type="checkbox" id="technique-dan-3" name="technique-dan-3" value="technique-dan-3" formControlName="technique_dan_3">
+        </div>
+
+        <div>
+            <label for="technique-dan-4">Requis pour: Yondan</label><br>
+            <input type="checkbox" id="technique-dan-4" name="technique-dan-4" value="technique-dan-4" formControlName="technique_dan_4">
+        </div>
+    } @else if (areWeDeleting) {
+        <div>
+            <label for="technique_select">Selectionner la technique à modifier:</label>
+            <select formControlName="technique_select" (change)="updateCheckboxesAndNameForTechnique()">
+                @for(technique of techniques; track technique.technique_id){
+                    <option (click)="deleteTechnique(technique.technique_id)" [ngValue]="technique">{{technique.technique_wonderfull_name}}</option>
+                }
+            </select>
+        </div>
+    }
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="techniqueForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

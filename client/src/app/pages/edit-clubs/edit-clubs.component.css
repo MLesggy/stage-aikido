@@ -1,0 +1,66 @@
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-container {
+    height: 100%;
+    width: 100%;
+    gap: 50px;
+}
+
+.delete, .modify, .add {
+    width: 25px;
+    height: 25px;
+}
+
+.delete:hover , .modify:hover, .add:hover {
+    cursor: pointer;
+}
+
+table {
+    border-collapse: collapse;
+    width: 40vw;
+    border: 2px black solid;
+    text-align: left;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+tr:hover {
+    background-color: #f5f5f5;
+}
+
+.line {
+    gap: 10px;
+}
+
+span {
+    display: block;
+    word-wrap: break-word;
+    width: 50%;
+}
+
+.left-span {
+    text-align: left;
+}
+
+.right-span {
+    word-wrap: break-word;
+    text-align: right;
+}
+
+.edit-icons {
+    justify-content: right;
+    gap: 5px;
+}

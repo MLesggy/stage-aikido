@@ -1,0 +1,129 @@
+@if(this.milestones){
+    <div class="container flex-column">
+        <h1>Modifications pour la page Parcours</h1>
+
+        @for( divRelevance of divRelevances; track divRelevance.div_relevance_id){
+        <table>
+            <thead>
+                <tr>
+                    <th>{{divRelevance.div_relevance_milestone.milestone_title}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- refactorer ici chercher les stories dans les stories, getStories? -->
+                @for(story of getDivRelevanceById(divRelevance.div_relevance_id); track $index; let i = $index){
+                    <tr>
+                        <td class="line flex">
+                            <div class="edit-icons flex">
+                                <p>{{divRelevance.div_relevance_story.story_text}}</p>
+                                <img class="delete" src="images/icon-delete.png" alt="Icone de suppression"
+                                    (click)="deleteStory(divRelevance.div_relevance_story)">
+                                <img class="modify" src="images/icon-edit.png" alt="Icone de modification"
+                                    (click)="editStory(divRelevance.div_relevance_story)">
+                            </div>
+                        </td>
+                    </tr>
+
+                    @if(divRelevance.div_relevance_image){
+                    <tr>
+                        <td>
+                            <img class="size" [src]="this.imagesService.getImageUrl(divRelevance.div_relevance_image[0].image_id)" alt="pouet">
+
+                        </td>
+                    </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        }
+
+
+        <table>
+            <span>Nouvelle Story</span>
+            <tr>
+                <td>
+                    <img class="modify" src="images/icon-add.png" alt="icone d'ajout" (click)="openModal2()">
+                </td>
+            </tr>
+        </table>
+    </div>
+}
+
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #StoryFormTemplate>
+    <form [formGroup]="StoryForm" (ngSubmit)="onSubmit()">
+        @if (StoryForm.get('story_id')?.value > 0) {
+        <div>
+            <label for="story-id">Story ID:</label>
+            <input id="story-id" formControlName="story_id">
+        </div>
+        }
+        <div>
+            <label for="text">Texte:</label>
+            <input id="text" formControlName="story_text">
+        </div>
+        <div>
+            <button type="button" (click)="closeModal()">Annuler</button>
+            <button type="submit" [disabled]="StoryForm.invalid">Enregistrer</button>
+        </div>
+    </form>
+</ng-template>
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #AddStoryFormTemplate>
+    <form [formGroup]="DivForm" (ngSubmit)="onSubmit2()">
+        <div>
+            <label for="story_text">Story:</label>
+            <input id="story_text" formControlName="story_text">
+        </div>
+        <div>
+            <label for="div_relevance_image"> Image :</label>
+            <input hidden type="text" formControlName="image">
+            <button type="button" (click)="openImageModal()">Ajouter une image</button>
+        </div>
+
+        <div>
+            <label for="selectedMilestone">Choisir un parcours:</label>
+            <select name="selectedMilestone" id="selectedMilestone" formControlName="div_relevance_milestone_id">
+                <option value="2">Parcours Enseignant</option>
+                <option value="1"> Parcours Eleve</option>
+            </select>
+        </div>
+        <div>
+            <button type="button" (click)="closeModal2()">Annuler</button>
+            <button type="submit">Enregistrer</button>
+        </div>
+    </form>
+</ng-template>
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #imageFormTemplate>
+    <form [formGroup]="imageForm" (ngSubmit)="onImageSubmit()">
+        <div>
+            <label for="image-id">Image ID:</label>
+            <input id="image-id" formControlName="image_id">
+        </div>
+
+
+        <div>
+            <label for="image-description">Description:</label>
+            <input id="image-description" formControlName="image_description">
+        </div>
+
+        <div>
+            <label for="image-blob">Image:</label>
+            <input type="file" id="image-blob" (change)="onImageSelected($event)" accept="image/*">
+        </div>
+
+        <div>
+            <button type="button" (click)="closeModal()">Annuler</button>
+            <button type="submit">Enregistrer</button>
+        </div>
+    </form>
+</ng-template>
+
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

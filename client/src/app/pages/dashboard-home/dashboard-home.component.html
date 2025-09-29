@@ -1,0 +1,12 @@
+@if (this.authService.isLoggedIn()){
+    <div class="admin-banner">
+        <div class="admin-top">
+            <p id="admin">Administrateur</p>
+        </div>
+        <div class="admin-bot">
+            <p>{{adminEmail}}</p>
+            <a (click)="navigateTo('change-email')">Modifier l'addresse mail</a>
+            <a (click)="navigateTo('change-password')">Modifier le mot de passe</a>
+        </div>
+    </div>
+}

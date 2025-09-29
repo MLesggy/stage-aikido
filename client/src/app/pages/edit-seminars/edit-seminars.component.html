@@ -1,0 +1,358 @@
+@if (authService.isLoggedIn() && seminars && address){
+<div class="edit-container flex-column">
+  <h1>Modifications pour la page Stages / événements</h1>
+
+  <a (click)="openSeminarModal(1)">Ajouter un stage / événement</a>
+
+  @for (seminar of seminars; track seminar.seminar_id) {
+  <table>
+    <thead>
+      <tr>
+        <th class="line flex">
+          <span target="_blank" class="left-span">{{ seminar.seminar_title }}</span>
+          <span class="edit-icons flex">
+            <img class="delete" src="images/icon-delete.png" alt="Icone de suppression"
+              (click)="deleteSeminar(seminar)">
+            <img class="modify" src="images/icon-edit.png" alt="Icone de modification" (click)="editSeminar(seminar)">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Stage ID:</span>
+          <span class="right-span">{{ seminar.seminar_id }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Titre:</span>
+          <span class="right-span">{{ seminar.seminar_title }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Date de début:</span>
+          <span class="right-span">{{ seminar.seminar_start_time | date:'dd/MM/yy à hh:mm' }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Date de fin:</span>
+          <span class="right-span">{{ seminar.seminar_end_time | date:'dd/MM/yy à hh:mm' }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Description:</span>
+          <span class="right-span">{{ seminar.seminar_description }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Prix:</span>
+          <span class="right-span">{{ seminar.seminar_price }} €</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Enseignant:</span>
+          <span class="right-span">{{ seminar.seminar_professor }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Email de l'enseignant:</span>
+          <span class="right-span">{{ seminar.seminar_email }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Téléphone de l'enseignant:</span>
+          <span class="right-span">{{ seminar.seminar_phone }}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Addresse:</span>
+          <span class="right-span">{{this.addressService.getFormatedAddress(seminar.seminar_address)}}</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Image:</span>
+          <span class="right-span">{{ seminar.seminar_image[0].image_name}}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  }
+</div>
+}
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #seminarFormTemplate>
+  <form [formGroup]="seminarForm" (ngSubmit)="onSeminarSubmit()">
+    @if (areWeCreatingSeminar){
+    <div>
+      <label for="seminar-id">Stage ID:</label>
+      <input id="seminar-id" formControlName="seminar_id">
+    </div>
+
+    <div>
+      <label for="seminar-title">Titre du stage:</label>
+      <input id="seminar-title" formControlName="seminar_title">
+    </div>
+
+    <div>
+      <label for="seminar-start">Heure du début:</label>
+      <input id="seminar-start" formControlName="seminar_start_time" type="datetime-local">
+    </div>
+
+    <div>
+      <label for="seminar-end">Heure de fin:</label>
+      <input id="seminar-end" formControlName="seminar_end_time" type="datetime-local">
+    </div>
+
+    <div>
+      <label for="seminar-description">Description:</label>
+      <input id="seminar-description" formControlName="seminar_description">
+    </div>
+
+    <div>
+      <label for="seminar-price">Prix:</label>
+      <input id="seminar-price" formControlName="seminar_price">
+    </div>
+
+    <div>
+      <label for="seminar-professor">Enseignant:</label>
+      <input id="seminar-professor" formControlName="seminar_professor">
+    </div>
+
+    <div>
+      <label for="seminar-email">Email:</label>
+      <input id="seminar-email" formControlName="seminar_email">
+    </div>
+
+    <div>
+      <label for="seminar-phone">Téléphone:</label>
+      <input id="seminar-phone" formControlName="seminar_phone">
+    </div>
+
+    <div>
+      <label for="seminar-address">Adresse :</label>
+      <select id="seminar-address" formControlName="address_id">
+        <option (click)="openAddressModal(1)">Ajouter une adresse</option>
+        <option (click)="openAddressModal(2)">Modifier une adresse</option>
+        <option (click)="openAddressModal(3)">Supprimer une adresse</option>
+        @for(address of address; track address.address_id) {
+          <option [value]="address.address_id">
+            {{this.addressService.getFormatedAddress(address)}}
+          </option>
+        }
+      </select>
+    </div>
+    } @else {
+    <div>
+      <label for="seminar-id">Stage ID:</label>
+      <input id="seminar-id" formControlName="seminar_id">
+    </div>
+
+    <div>
+      <label for="seminar-title">Titre du stage:</label>
+      <input id="seminar-title" formControlName="seminar_title">
+    </div>
+
+    <div>
+      <label for="seminar-start">Heure du début:</label>
+      <input id="seminar-start" formControlName="seminar_start_time" type="datetime-local">
+    </div>
+
+    <div>
+      <label for="seminar-end">Heure de fin:</label>
+      <input id="seminar-end" formControlName="seminar_end_time" type="datetime-local">
+    </div>
+
+    <div>
+      <label for="seminar-description">Description:</label>
+      <input id="seminar-description" formControlName="seminar_description">
+    </div>
+
+    <div>
+      <label for="seminar-price">Prix:</label>
+      <input id="seminar-price" formControlName="seminar_price">
+    </div>
+
+    <div>
+      <label for="seminar-professor">Enseignant:</label>
+      <input id="seminar-professor" formControlName="seminar_professor">
+    </div>
+
+    <div>
+      <label for="seminar-email">Email:</label>
+      <input id="seminar-email" formControlName="seminar_email">
+    </div>
+
+    <div>
+      <label for="seminar-phone">Téléphone:</label>
+      <input id="seminar-phone" formControlName="seminar_phone">
+    </div>
+
+    <div>
+      <label for="seminar-address">Adresse :</label>
+      <select id="seminar-address" formControlName="address_id">
+        <option (click)="openAddressModal(1)">Ajouter une adresse</option>
+        <option (click)="openAddressModal(2)">Modifier une adresse</option>
+        <option (click)="openAddressModal(3)">Supprimer une adresse</option>
+        @for(address of address; track address.address_id) {
+          <option [value]="address.address_id">
+            {{this.addressService.getFormatedAddress(address)}}
+          </option>
+        }
+      </select>
+    </div>
+    <div>
+      <label for="seminar-image">Image :</label>
+      <select id="seminar-image">
+        <option (click)="openImageModal()">Ajouter une image</option>
+        <option [value]="" [selected]="true">
+          {{currentSeminar.seminar_image[0].image_name}}
+        </option>
+      </select>
+    </div>
+    }
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="seminarForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #addressFormTemplate>
+  <form [formGroup]="addressForm" (ngSubmit)="onAddressSubmit()">
+    @if(areWeCreatingAddress){
+    @if (seminarForm.get('seminar_id')?.value > 0) {
+    <div>
+      <label for="address-id">Adresse ID:</label>
+      <input id="address-id" formControlName="address_id">
+    </div>
+    }
+    <div>
+      <label for="address-street">N° et rue:</label>
+      <input id="address-street" formControlName="address_street">
+    </div>
+
+    <div>
+      <label for="address-complement">Complement:</label>
+      <input id="address-complement" formControlName="address_complement">
+    </div>
+
+    <div>
+      <label for="address-postal-code">Code Postal:</label>
+      <input id="address-postal-code" formControlName="address_postal_code">
+    </div>
+
+    <div>
+      <label for="address-city">Ville:</label>
+      <input id="address-city" formControlName="address_city">
+    </div>
+
+    <div>
+      <label for="address-country">Pays:</label>
+      <input id="address-country" formControlName="address_country">
+    </div>
+    } @else if(areWeSelectingAddress){
+    <div>
+      <label for="address-modify">Addresse à modifier :</label>
+      <select id="address-modify">
+        @for(address of address; track address.address_id) {
+          <option [value]="address.address_id" (click)="editAddress(address)">
+            {{this.addressService.getFormatedAddress(address)}}
+          </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeDeletingAddress) {
+    <div>
+      <label for="address-delete">Addresse à supprimer :</label>
+      <select id="address-delete">
+        @for(address of address; track address.address_id) {
+          <option [value]="address.address_id" (click)="deleteAddress(address)">
+            {{this.addressService.getFormatedAddress(address)}}
+          </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeEditingAddress) {
+    <div>
+      <label for="address-id">Adresse ID:</label>
+      <input id="address-id" formControlName="address_id">
+    </div>
+
+    <div>
+      <label for="address-street">N° et rue:</label>
+      <input id="address-street" formControlName="address_street">
+    </div>
+
+    <div>
+      <label for="address-complement">Complement:</label>
+      <input id="address-complement" formControlName="address_complement">
+    </div>
+
+    <div>
+      <label for="address-postal-code">Code Postal:</label>
+      <input id="address-postal-code" formControlName="address_postal_code">
+    </div>
+
+    <div>
+      <label for="address-city">Ville:</label>
+      <input id="address-city" formControlName="address_city">
+    </div>
+
+    <div>
+      <label for="address-country">Pays:</label>
+      <input id="address-country" formControlName="address_country">
+    </div>
+    }
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" [disabled]="addressForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #imageFormTemplate>
+  <form [formGroup]="imageForm" (ngSubmit)="onImageSubmit()">
+    <div>
+      <label for="seminar-id">Seminar ID:</label>
+      <input id="seminar-id" formControlName="seminar_id">
+    </div>
+
+    <div>
+      <label for="image-description">Description:</label>
+      <input id="image-description" formControlName="image_description">
+    </div>
+
+    <div>
+      <label for="image-blob">Image:</label>
+      <input type="file" id="image-blob" (change)="onImageSelected($event)" accept="image/*">
+    </div>
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

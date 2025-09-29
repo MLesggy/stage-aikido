@@ -1,0 +1,92 @@
+<div class="page-container">
+    <div id="title">
+        <h1>Liens utiles</h1>
+        <h2>Mes recommandations</h2>
+    </div>
+
+    <div id="tables">
+        <div id="tab-clubs">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Clubs</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (link of getLinksByRecommendationId(1); track $index; let i = $index){
+                        <tr>
+                            <td><a target="_blank" href={{link.link_url}}>{{ link.link_text }}</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <div id="tab-fede">
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Fédérations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (link of getLinksByRecommendationId(2); track $index; let i = $index){
+                        <tr>
+                            <td><a target="_blank" href={{link.link_url}}>{{ link.link_text }}</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div id="tab-stage">
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Stages</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (link of getLinksByRecommendationId(4); track $index; let i = $index){
+                    <tr>
+                        <td><a target="_blank" href={{link.link_url}}>{{ link.link_text }}</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+    <div id="tab-teach">
+
+        <table>
+            <thead>
+                <tr>
+                    <th colspan="2">Professeurs recommandés</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (link of getLinksByRecommendationId(3); track link; let i = $index){
+                    @if (i % 2 === 0) {
+                        <tr>
+                            <td><a target="_blank" href={{link.link_url}}>{{ link.link_text }}</a></td>
+                            @if (i + 1 < getLinksByRecommendationId(3).length) { 
+                                <td>
+                                    <a target="_blank" href="{{getLinksByRecommendationId(3)[i + 1].link_url}}">{{getLinksByRecommendationId(3)[i + 1].link_text}}</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
+
+</div>

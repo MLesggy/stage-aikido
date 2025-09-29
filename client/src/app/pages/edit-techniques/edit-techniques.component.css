@@ -1,0 +1,39 @@
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.content {
+    gap: 5vh;
+}
+
+.tables-container {
+    gap: 30px;
+}
+
+table {
+    width: 90%;
+    border-collapse: collapse;
+    border: 1px black solid;
+}
+
+td, th {
+    padding: 5px;
+    text-align: center;
+    border: 1px black solid;
+}
+
+.th-technique, .th-official, .th-work-form, .th-attack-form, .th-exams {
+    width: 10%;
+}
+
+button {
+    width: 10vw;
+}

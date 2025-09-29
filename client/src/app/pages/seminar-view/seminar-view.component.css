@@ -1,0 +1,53 @@
+.flex {
+    display: flex;
+}
+
+.seminar-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin: 5vh 10vw 5vh 10vw;
+    gap: 20px;
+    height: 80dvh;
+}
+
+.right, .left {
+    flex: 1;
+    box-sizing: border-box;
+    height: 80dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.location, .schedules, .teacher, .contact, .price, .description {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    
+    img {
+        height: 50px;
+        width: 50px;
+        flex-shrink: 0;
+    }
+}
+
+.left > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.right {
+    justify-content: space-between;
+    overflow-y: scroll;
+    scrollbar-width: none;
+}
+
+.description > textarea {
+    width: 100%;
+    height: 10vh;
+    border-radius: 15px;
+    border: 2px solid #8B0C0C;
+    resize: none;
+}

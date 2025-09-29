@@ -1,0 +1,515 @@
+@if(this.authService.isLoggedIn() && this.clubs && this.address){
+<div class="main-container flex-column">
+  <h1>Modifications pour la page Clubs</h1>
+
+  <a (click)="openClubModal(1)">Ajouter un Club</a>
+
+  @for (club of clubs; track club.club_id) {
+  <table>
+    <thead>
+      <tr>
+        <th class="line flex">
+          <span class="left-span">{{club.club_name}}</span>
+          <span class="edit-icons flex">
+            <img class="delete" src="images/icon-delete.png" alt="Icone de suppression" (click)="deleteClub(club)">
+            <img class="modify" src="images/icon-edit.png" alt="Icone de modification" (click)="editClub(club)">
+          </span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Contact:</span>
+          <span class="right-span">{{club.club_contact_name}}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Téléphone:</span>
+          <span class="right-span">{{club.club_contact_phone}}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Email:</span>
+          <span class="right-span">{{club.club_contact_email}}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Adresse:</span>
+          <span class="right-span">{{addressService.getFormatedAddress(club.club_address)}}</span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Horaires:</span>
+          <span class="right-span">
+            @for(schedule of club.club_schedules; track schedule.club_schedule_id){
+            {{clubSchedulesService.getDayFromNumber(schedule.club_schedule_day_of_week)}}:
+            {{schedule.club_schedule_start_time}} - {{schedule.club_schedule_end_time}}<br>
+            }
+          </span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Liens:</span>
+          <span class="right-span">
+            @for(link of club.club_links; track link.link_id){
+            {{link.link_text}}<br>
+            }
+          </span>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="line flex">
+          <span class="left-span">Affiche:</span>
+          <span class="right-span">{{club.club_images[0].image_name ? club.club_images[0].image_name : ''}}</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  }
+</div>
+}
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #clubFormTemplate>
+  <form [formGroup]="clubForm" (ngSubmit)="onClubSubmit()">
+    @if(areWeEditingClub){
+    <div>
+      <label for="club-id">Club ID:</label>
+      <input id="club-id" formControlName="club_id">
+    </div>
+
+    <div>
+      <label for="club-name">Nom:</label>
+      <input id="club-name" formControlName="club_name">
+    </div>
+
+    <div>
+      <label for="club-contact">Contact:</label>
+      <input id="club-contact" formControlName="club_contact_name">
+    </div>
+
+    <div>
+      <label for="club-phone">Téléphone:</label>
+      <input id="club-phone" formControlName="club_contact_phone">
+    </div>
+
+    <div>
+      <label for="club-email">Email:</label>
+      <input id="club-email" formControlName="club_contact_email">
+    </div>
+
+    <div>
+      <label for="club-address">Adresse :</label>
+      <select id="club-address" formControlName="address_id">
+        <option (click)="openAddressModal(1)">Ajouter une adresse</option>
+        <option (click)="openAddressModal(2)">Modifier une adresse</option>
+        <option (click)="openAddressModal(3)">Supprimer une adresse</option>
+        @for(address of address; track address.address_id) {
+        <option [value]="address.address_id">
+          {{address.address_street}} {{address.address_complement}} {{address.address_postal_code}}
+          {{address.address_city}}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="club-schedules">Horaires:</label>
+      <select id="club-schedules">
+        <option (click)="openClubSchedulesModal(1)">Ajouter un horaire</option>
+        <option (click)="openClubSchedulesModal(2)">Modifier un horaire</option>
+        <option (click)="openClubSchedulesModal(3)">Supprimer un horaire</option>
+        @for(schedule of currentClub.club_schedules; track schedule.club_schedule_id) {
+        <option [value]="schedule.club_schedule_id">
+          {{clubSchedulesService.getDayFromNumber(schedule.club_schedule_day_of_week)}}:
+          {{schedule.club_schedule_start_time}} - {{schedule.club_schedule_end_time}}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="club-links">Liens:</label>
+      <select id="clubs-links">
+        <option (click)="openLinksModal(1)">Ajouter un lien</option>
+        <option (click)="openLinksModal(2)">Modifier un lien</option>
+        <option (click)="openLinksModal(3)">Supprimer un lien</option>
+        @for(link of currentClub.club_links; track link.link_id) {
+        <option [value]="link.link_id">
+          {{link.link_text}}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="club-image">Image :</label>
+      <select id="club-image">
+        <option (click)="openImageModal()">Ajouter une image</option>
+        <option [value]="" [selected]="true">
+          {{currentClub.club_images[0].image_name}}
+        </option>
+      </select>
+    </div>
+    }@else if (areWeCreatingClub) {
+    <div>
+      <label for="club-id">Club ID:</label>
+      <input id="club-id" formControlName="club_id">
+    </div>
+
+    <div>
+      <label for="club-name">Nom:</label>
+      <input id="club-name" formControlName="club_name">
+    </div>
+
+    <div>
+      <label for="club-contact">Contact:</label>
+      <input id="club-contact" formControlName="club_contact_name">
+    </div>
+
+    <div>
+      <label for="club-phone">Téléphone:</label>
+      <input id="club-phone" formControlName="club_contact_phone">
+    </div>
+
+    <div>
+      <label for="club-email">Email:</label>
+      <input id="club-email" formControlName="club_contact_email">
+    </div>
+
+    <div>
+      <label for="club-address">Adresse :</label>
+      <select id="club-address" formControlName="address_id">
+        <option (click)="openAddressModal(1)">Ajouter une adresse</option>
+        <option (click)="openAddressModal(2)">Modifier une adresse</option>
+        <option (click)="openAddressModal(3)">Supprimer une adresse</option>
+        @for(address of address; track address.address_id) {
+        <option [value]="address.address_id">
+          {{address.address_street}} {{address.address_complement}} {{address.address_postal_code}}
+          {{address.address_city}}
+        </option>
+        }
+      </select>
+    </div>
+    }
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Template du formulaire ClubSchedules qui sera utilisé dans la modal -->
+<ng-template #clubSchedulesFormTemplate>
+  <form [formGroup]="clubSchedulesForm" (ngSubmit)="onClubSchedulesSubmit()">
+    @if(areWeCreatingClubSchedule) {
+    @if (clubSchedulesForm.get('club_schedule_id')?.value > 0) {
+    <div>
+      <label for="schedule-id">Horaire ID:</label>
+      <input id="schedule-id" formControlName="club_schedule_id">
+    </div>
+    }
+    <div>
+      <label for="schedule-day">Jour :</label>
+      <select id="schedule-day" formControlName="club_schedule_day_of_week">
+        @for(i of [1, 2, 3, 4, 5, 6, 7]; track i) {
+        <option [value]="i">
+          {{clubSchedulesService.getDayFromNumber(i)}}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="schedule-start">Heure de début:</label>
+      <input id="schedule-start" type="time" formControlName="club_schedule_start_time">
+    </div>
+
+    <div>
+      <label for="schedule-end">Heure de fin:</label>
+      <input id="schedule-end" type="time" formControlName="club_schedule_end_time">
+    </div>
+
+    <div>
+      <label for="schedule-notes">Notes (adultes, armes...):</label>
+      <input id="schedule-notes" formControlName="club_schedule_notes">
+    </div>
+    } @else if (areWeSelectingClubSchedule) {
+    <div>
+      <label for="schedule-modify">Horaire à modifier :</label>
+      <select id="schedule-modify">
+        @for(schedule of currentClub.club_schedules; track schedule.club_schedule_id) {
+        <option [value]="schedule.club_schedule_id" (click)="editClubSchedule(schedule)">
+          {{clubSchedulesService.getDayFromNumber(schedule.club_schedule_day_of_week)}}:
+          {{schedule.club_schedule_start_time}} - {{schedule.club_schedule_end_time}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeDeletingClubSchedule) {
+    <div>
+      <label for="schedule-delete">Horaire à supprimer :</label>
+      <select id="schedule-delete">
+        @for(schedule of currentClub.club_schedules; track schedule.club_schedule_id) {
+        <option [value]="schedule.club_schedule_id" (click)="deleteClubSchedule(schedule)">
+          {{clubSchedulesService.getDayFromNumber(schedule.club_schedule_day_of_week)}}:
+          {{schedule.club_schedule_start_time}} - {{schedule.club_schedule_end_time}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeEditingClubSchedule) {
+    <div>
+      <label for="schedule-id">Horaire ID:</label>
+      <input id="schedule-id" formControlName="club_schedule_id">
+    </div>
+
+    <div>
+      <label for="schedule-day">Jour :</label>
+      <select id="schedule-day" formControlName="club_schedule_day_of_week">
+        @for(i of [1, 2, 3, 4, 5, 6, 7]; track i) {
+        <option [value]="i">
+          {{clubSchedulesService.getDayFromNumber(i)}}
+        </option>
+        }
+      </select>
+    </div>
+
+    <div>
+      <label for="schedule-start">Heure de début:</label>
+      <input type="time" id="schedule-start" formControlName="club_schedule_start_time">
+    </div>
+
+    <div>
+      <label for="schedule-end">Heure de fin:</label>
+      <input type="time" id="schedule-end" formControlName="club_schedule_end_time">
+    </div>
+
+    <div>
+      <label for="schedule-notes">Notes (adultes, armes...):</label>
+      <input id="schedule-notes" formControlName="club_schedule_notes">
+    </div>
+    }
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<!-- Template du formulaire links qui sera utilisé dans la modal -->
+<ng-template #linksFormTemplate>
+  <form [formGroup]="linksForm" (ngSubmit)="onLinksSubmit()">
+    @if(areWeCreatingLink) {
+    @if (linksForm.get('link_id')?.value > 0) {
+    <div>
+      <label for="link-id">Lien ID:</label>
+      <input id="link-id" formControlName="link_id">
+    </div>
+
+    <div>
+      <label for="club-id">Club ID:</label>
+      <input id="club-id" formControlName="club_id">
+    </div>
+    }
+    <div>
+      <label for="link-text">Texte:</label>
+      <input id="link-text" formControlName="link_text">
+    </div>
+
+    <div>
+      <label for="link-url">Url:</label>
+      <input id="link-url" formControlName="link_url">
+    </div>
+    } @else if (areWeSelectingLink) {
+    <div>
+      <label for="link-modify">Lien à modifier :</label>
+      <select id="link-modify">
+        @for(link of currentClub.club_links; track link.link_id) {
+        <option [value]="link.link_id" (click)="editLink(link)">
+          {{link.link_text}}: {{link.link_url}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeDeletingLink) {
+    <div>
+      <label for="link-delete">Lien à supprimer :</label>
+      <select id="link-delete">
+        @for(link of currentClub.club_links; track link.link_id) {
+        <option [value]="link.link_id" (click)="deleteLink(link)">
+          {{link.link_text}}: {{link.link_url}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeEditingLink) {
+    <div>
+      <label for="link-id">Lien ID:</label>
+      <input disabled id="link-id" value="{{currentLink.link_id}}">
+    </div>
+
+    <div>
+      <label for="club-id">Club ID:</label>
+      <input disabled id="club-id" value="{{currentLink.club_id}}">
+    </div>
+
+    <div>
+      <label for="link-text">Texte:</label>
+      <input id="link-text" formControlName="link_text">
+    </div>
+
+    <div>
+      <label for="link-url">Url:</label>
+      <input id="link-url" formControlName="link_url">
+    </div>
+    }
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit" [disabled]="linksForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #addressFormTemplate>
+  <form [formGroup]="addressForm" (ngSubmit)="onAddressSubmit()">
+    @if(areWeCreatingAddress){
+    @if (clubForm.get('club_id')?.value > 0) {
+    <div>
+      <label for="address-id">Adresse ID:</label>
+      <input id="address-id" formControlName="address_id">
+    </div>
+    }
+    <div>
+      <label for="address-street">N° et rue:</label>
+      <input id="address-street" formControlName="address_street">
+    </div>
+
+    <div>
+      <label for="address-complement">Complement:</label>
+      <input id="address-complement" formControlName="address_complement">
+    </div>
+
+    <div>
+      <label for="address-postal-code">Code Postal:</label>
+      <input id="address-postal-code" formControlName="address_postal_code">
+    </div>
+
+    <div>
+      <label for="address-city">Ville:</label>
+      <input id="address-city" formControlName="address_city">
+    </div>
+
+    <div>
+      <label for="address-country">Pays:</label>
+      <input id="address-country" formControlName="address_country">
+    </div>
+    } @else if(areWeSelectingAddress){
+    <div>
+      <label for="address-modify">Addresse à modifier :</label>
+      <select id="address-modify">
+        @for(address of address; track address.address_id) {
+        <option [value]="address.address_id" (click)="editAddress(address)">
+          {{address.address_street}} {{address.address_complement}} {{address.address_postal_code}}
+          {{address.address_city}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeDeletingAddress) {
+    <div>
+      <label for="address-delete">Addresse à supprimer :</label>
+      <select id="address-delete">
+        @for(address of address; track address.address_id) {
+        <option [value]="address.address_id" (click)="deleteAddress(address)">
+          {{address.address_street}} {{address.address_complement}} {{address.address_postal_code}}
+          {{address.address_city}}
+        </option>
+        }
+      </select>
+    </div>
+    } @else if (areWeEditingAddress) {
+    <div>
+      <label for="address-id">Adresse ID:</label>
+      <input id="address-id" formControlName="address_id">
+    </div>
+
+    <div>
+      <label for="address-street">N° et rue:</label>
+      <input id="address-street" formControlName="address_street">
+    </div>
+
+    <div>
+      <label for="address-complement">Complement:</label>
+      <input id="address-complement" formControlName="address_complement">
+    </div>
+
+    <div>
+      <label for="address-postal-code">Code Postal:</label>
+      <input id="address-postal-code" formControlName="address_postal_code">
+    </div>
+
+    <div>
+      <label for="address-city">Ville:</label>
+      <input id="address-city" formControlName="address_city">
+    </div>
+
+    <div>
+      <label for="address-country">Pays:</label>
+      <input id="address-country" formControlName="address_country">
+    </div>
+    }
+
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #imageFormTemplate>
+  <form [formGroup]="imageForm" (ngSubmit)="onImageSubmit()">
+    <div>
+      <label for="club-id">Club ID:</label>
+      <input id="club-id" formControlName="club_id">
+    </div>
+
+    <div>
+      <label for="image-description">Description:</label>
+      <input id="image-description" formControlName="image_description">
+    </div>
+
+    <div>
+      <label for="image-blob">Image:</label>
+      <input type="file" id="image-blob" (change)="onImageSelected($event)" accept="image/*">
+    </div>
+
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

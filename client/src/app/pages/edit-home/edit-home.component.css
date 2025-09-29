@@ -1,0 +1,29 @@
+.flex-column{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+td{ 
+    border: solid 2px black;
+    padding: 10px;
+}
+table{
+    width: 700px;
+    height: 400px;
+}
+input{
+    width: 500px;
+}
+.color-button{
+    background-color: #8B0C0C;
+    border-radius: 4px;  
+    color: white;
+}
+.center {
+  text-align: center;
+}

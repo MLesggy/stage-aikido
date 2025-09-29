@@ -1,0 +1,61 @@
+@if (seminar && seminarLocation){
+    <h1>Stages / Evenements</h1>
+    <h2 class="no-color">{{seminar.seminar_title}} le {{seminar.seminar_start_time | date:'dd MMMM yyyy'}}</h2>
+
+    <div class="seminar-container">
+
+        <div class="left">
+            @if (seminar.seminar_image[0] && seminar.seminar_image[0].image_id != -1){
+                <img [src]="this.imagesService.getImageUrl(seminar.seminar_image[0].image_id)" [alt]="seminar.seminar_image[0].image_description || 'Image'" class="student-image">
+            } @else {
+                <p>No Image</p>
+            }
+        </div>
+
+        <div class="right">
+            <div class="map">
+                    <app-map [longitude]="seminarLocation[0]" [latitude]="seminarLocation[1]"></app-map>
+            </div>
+
+            <div class="location flex">
+                <img src="images/icon-location.png" alt="icone de location">
+                <p>{{seminarFullAdress}}</p>
+            </div>
+
+            <div class="schedules flex">
+                <img src="images/icon-schedules.png" alt="icone horaires">
+                <p>de {{seminar.seminar_start_time | date:'hh:mm'}} à {{seminar.seminar_end_time | date:'hh:mm'}}</p>
+            </div>
+
+            <div class="teacher flex">
+                <img src="images/icon-teacher.png" alt="icone de professeur">
+                <p>{{seminar.seminar_professor}}</p>
+            </div>
+
+            <div class="contact flex">
+                <img src="images/icon-contact.png" alt="icone de contact">
+                @if (seminar.seminar_email && seminar.seminar_email.length > 0){
+                    <p>{{seminar.seminar_professor}}: <a href="mailto:{{seminar.seminar_email}}">{{seminar.seminar_email}}</a></p>
+                } @else if (seminar.seminar_phone && seminar.seminar_phone.length > 0){
+                    <p>{{seminar.seminar_professor}}: {{seminar.seminar_phone}}</p>
+                }
+            </div>
+            
+            <div class="price flex">
+                <img src="images/icon-price.png" alt="icone de prix">
+                @if (seminar.seminar_price && seminar.seminar_price > 0){
+                    <p>{{seminar.seminar_price}} €</p>
+                } @else {
+                    <p>N/A</p>
+                }
+            </div>
+
+            <div class="description flex">
+                <img src="images/icon-description.png" alt="icone de description">
+                <textarea name="" id="">{{seminar.seminar_description}}</textarea>
+            </div>
+
+        </div>
+
+    </div>
+}

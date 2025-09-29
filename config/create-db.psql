@@ -1,0 +1,351 @@
+-- =============================================================================
+-- Script de Création de Base de Données (MPD) pour PostgreSQL
+-- Basé sur le MLD FINAL et Contraintes Additionnelles
+-- Convention de nommage : tableName_attribute
+-- =============================================================================
+
+CREATE DATABASE "stage-aikido";
+
+-- Supprime les tables existantes dans l'ordre inverse des dépendances
+-- DROP TABLE IF EXISTS techniques_dan_relevance;
+-- DROP TABLE IF EXISTS attack_forms_dan_relevance;
+-- DROP TABLE IF EXISTS div_relevance;
+-- DROP TABLE IF EXISTS links;
+-- DROP TABLE IF EXISTS club_schedules;
+-- DROP TABLE IF EXISTS techniques;
+-- DROP TABLE IF EXISTS images;
+-- DROP TABLE IF EXISTS seminars;
+-- DROP TABLE IF EXISTS clubs;
+-- DROP TABLE IF EXISTS stories;
+-- DROP TABLE IF EXISTS milestones;
+-- DROP TABLE IF EXISTS admin;
+-- DROP TABLE IF EXISTS password_reset_tokens;
+-- DROP TABLE IF EXISTS grades;
+-- DROP TABLE IF EXISTS work_forms;
+-- DROP TABLE IF EXISTS attack_forms;
+-- DROP TABLE IF EXISTS dan_grades;
+-- DROP TABLE IF EXISTS recommendations;
+-- DROP TABLE IF EXISTS address;
+-- DROP TABLE IF EXISTS home_data;
+
+-- =============================================================================
+-- TABLES DE RÉFÉRENCE (Lookup Tables)
+-- =============================================================================
+
+-- Table admin
+CREATE TABLE admin (
+    admin_id       SERIAL PRIMARY KEY,
+    admin_email    VARCHAR(255) NOT NULL UNIQUE,
+    admin_password VARCHAR(60) NOT NULL
+);
+
+-- Table password_reset_tokens
+CREATE TABLE password_reset_tokens (
+  password_reset_token_id           SERIAL PRIMARY KEY,
+  password_reset_token_admin_id     INTEGER NOT NULL,
+  password_reset_token_token        VARCHAR(255) NOT NULL,
+  password_reset_token_expires_at   TIMESTAMP NOT NULL,
+  password_reset_tokens_used        BOOLEAN DEFAULT FALSE,
+  FOREIGN KEY (password_reset_token_admin_id) REFERENCES admin(admin_id)
+);
+CREATE INDEX idx_password_reset_tokens_token ON password_reset_tokens(password_reset_token_token);
+
+
+-- Table grades
+CREATE TABLE grades (
+    grade_id   SERIAL PRIMARY KEY,
+    grade_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Table work_forms
+CREATE TABLE work_forms (
+    work_form_id   SERIAL PRIMARY KEY,
+    work_form_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Table attack_forms
+CREATE TABLE attack_forms (
+    attack_form_id   SERIAL PRIMARY KEY,
+    attack_form_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Table dan_grades
+CREATE TABLE dan_grades (
+    dan_grade_id   SERIAL PRIMARY KEY,
+    dan_grade_name VARCHAR(50) NOT NULL UNIQUE
+);
+
+-- Table recommendations
+CREATE TABLE recommendations (
+    recommendation_id   SERIAL PRIMARY KEY,
+    recommendation_type VARCHAR(50) NOT NULL
+);
+
+-- Table address
+CREATE TABLE address (
+    address_id          SERIAL PRIMARY KEY,
+    address_street      VARCHAR(255) NOT NULL,
+    address_complement  VARCHAR(255),
+    address_postal_code VARCHAR(15) NOT NULL,
+    address_city        VARCHAR(50) NOT NULL,
+    address_country     VARCHAR(50) NOT NULL
+);
+
+-- =============================================================================
+-- TABLES PRINCIPALES
+-- =============================================================================
+
+-- Table milestones
+CREATE TYPE style AS ENUM ('quinconce', 'normal');
+CREATE TABLE milestones (
+    milestone_id          SERIAL PRIMARY KEY,
+    milestone_title       VARCHAR(50) NOT NULL,
+    milestone_style       style NOT NULL
+);
+
+-- Table milestones_stories
+CREATE TABLE stories(
+    story_id SERIAL NOT NULL,
+    story_text TEXT NOT NULL,
+    PRIMARY KEY(story_id)
+);
+
+-- Table clubs
+CREATE TABLE clubs (
+    club_id             SERIAL PRIMARY KEY,
+    club_name           VARCHAR(50) NOT NULL,
+    club_contact_name   VARCHAR(50) NOT NULL,
+    club_contact_phone  VARCHAR(20),
+    club_contact_email  VARCHAR(255),
+    address_id          INTEGER NOT NULL,
+
+    -- Garantit qu'au moins un moyen de contact (téléphone ou email) est fourni pour le club.
+    CONSTRAINT chk_club_contact
+       CHECK (club_contact_phone IS NOT NULL OR club_contact_email IS NOT NULL),
+
+    CONSTRAINT fk_clubs_address
+        FOREIGN KEY (address_id) REFERENCES address(address_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_clubs_address_id ON clubs(address_id);
+
+-- Table seminars
+CREATE TABLE seminars (
+    seminar_id          SERIAL PRIMARY KEY,
+    seminar_title       VARCHAR(50) NOT NULL,
+    seminar_start_time  TIMESTAMP NOT NULL,
+    seminar_end_time    TIMESTAMP NOT NULL,
+    seminar_description VARCHAR(500),
+    seminar_price       DECIMAL(10, 2),
+    seminar_professor   VARCHAR(50) NOT NULL,
+    seminar_email       VARCHAR(255),
+    seminar_phone       VARCHAR(20),
+    address_id          INTEGER NOT NULL,
+
+    -- Garantit qu'au moins un moyen de contact (email ou téléphone) est fourni pour le séminaire.
+    CONSTRAINT chk_seminar_contact
+        CHECK (seminar_email IS NOT NULL OR seminar_phone IS NOT NULL),
+
+    CONSTRAINT fk_seminars_address
+        FOREIGN KEY (address_id) REFERENCES address(address_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_seminars_address_id ON seminars(address_id);
+
+-- Table images
+CREATE TABLE images (
+    image_id          SERIAL PRIMARY KEY,
+    image_name        VARCHAR(50) NOT NULL,
+    image_size        INTEGER NOT NULL, 
+    image_type        VARCHAR(50) NOT NULL,
+    image_description VARCHAR(1024),
+    image_blob        BYTEA NOT NULL,
+    club_id           INTEGER UNIQUE,
+    seminar_id        INTEGER UNIQUE,
+
+    -- Garantit qu'une image est liée soit à un club, soit à un séminaire, ou à aucun (image autonome)
+    CONSTRAINT chk_images_owner
+        CHECK (
+            (CASE WHEN club_id      IS NOT NULL THEN 1 ELSE 0 END) +
+            (CASE WHEN seminar_id   IS NOT NULL THEN 1 ELSE 0 END)
+            <= 1
+        ),
+
+    CONSTRAINT fk_images_club
+        FOREIGN KEY (club_id) REFERENCES clubs(club_id)
+        ON DELETE SET NULL ON UPDATE CASCADE,
+    CONSTRAINT fk_images_seminar
+        FOREIGN KEY (seminar_id) REFERENCES seminars(seminar_id)
+        ON DELETE SET NULL ON UPDATE CASCADE
+);
+
+
+-- Table div_relevance 
+CREATE TABLE div_relevance (
+    div_relevance_id SERIAL NOT NULL,
+    div_relevance_image_id integer,
+    div_relevance_story_id integer,
+    div_relevance_milestone_id integer NOT NULL,
+    PRIMARY KEY(div_relevance_id),
+    
+    CONSTRAINT fk_div_image 
+        FOREIGN KEY(div_relevance_image_id) 
+        REFERENCES images(image_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+        
+    CONSTRAINT fk_div_story 
+        FOREIGN KEY(div_relevance_story_id) 
+        REFERENCES stories(story_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+        
+    CONSTRAINT fk_div_milestone 
+        FOREIGN KEY(div_relevance_milestone_id) 
+        REFERENCES milestones(milestone_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+        
+    -- Contrainte pour s'assurer qu'au moins un des deux champs n'est pas NULL
+    CONSTRAINT check_div_content CHECK (
+        (div_relevance_image_id IS NOT NULL) OR (div_relevance_story_id IS NOT NULL)
+    )
+);
+
+-- Création d'index pour améliorer les performances des jointures
+CREATE INDEX idx_div_relevance_image_id ON div_relevance(div_relevance_image_id);
+CREATE INDEX idx_div_relevance_story_id ON div_relevance(div_relevance_story_id);
+CREATE INDEX idx_div_relevance_milestone_id ON div_relevance(div_relevance_milestone_id);
+
+
+-- Table techniques
+CREATE TABLE techniques (
+    technique_id      SERIAL PRIMARY KEY,
+    technique_official BOOLEAN NOT NULL,
+    technique_move     VARCHAR(50) NOT NULL,
+    technique_link     VARCHAR(2048),
+    grade_id           INTEGER NOT NULL,
+    work_form_id       INTEGER NOT NULL,
+    attack_form_id     INTEGER NOT NULL,
+
+    CONSTRAINT fk_techniques_grade
+        FOREIGN KEY (grade_id) REFERENCES grades(grade_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_techniques_work_form
+        FOREIGN KEY (work_form_id) REFERENCES work_forms(work_form_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+    CONSTRAINT fk_techniques_attack_form
+        FOREIGN KEY (attack_form_id) REFERENCES attack_forms(attack_form_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_techniques_grade_id ON techniques(grade_id);
+CREATE INDEX idx_techniques_work_form_id ON techniques(work_form_id);
+CREATE INDEX idx_techniques_attack_form_id ON techniques(attack_form_id);
+
+-- Table links
+CREATE TABLE links (
+    link_id           SERIAL PRIMARY KEY,
+    link_text         VARCHAR(50) NOT NULL,
+    link_url          VARCHAR(2048) NOT NULL,
+    club_id           INTEGER,
+    recommendation_id INTEGER,
+
+    -- Garantit qu'un lien est lié soit à un club, soit à une recommendation
+    CONSTRAINT chk_links_owner
+       CHECK (
+           (CASE WHEN club_id IS NOT NULL THEN 1 ELSE 0 END) +
+           (CASE WHEN recommendation_id IS NOT NULL THEN 1 ELSE 0 END)
+           = 1
+       ),
+
+    CONSTRAINT fk_links_club
+        FOREIGN KEY (club_id) REFERENCES clubs(club_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_links_recommendation
+        FOREIGN KEY (recommendation_id) REFERENCES recommendations(recommendation_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_links_club_id ON links(club_id);
+CREATE INDEX idx_links_recommendation_id ON links(recommendation_id);
+
+
+-- Table home_data
+CREATE TABLE home_data(
+    home_data_id SERIAL PRIMARY KEY,
+    home_data_title VARCHAR(100) NOT NULL,
+    home_data_subtitle TEXT NOT NULL,
+    home_data_video_url VARCHAR(1000) NOT NULL,
+    image_id INTEGER NOT NULL,
+    
+    CONSTRAINT fk_home_data_image
+        FOREIGN KEY (image_id) REFERENCES images(image_id)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- Crée un index sur la clé étrangère pour optimiser les jointures
+CREATE INDEX idx_home_data_image_id ON home_data(image_id);
+
+
+-- =============================================================================
+-- TABLES ASSOCIATIVES / DÉTAILS
+-- =============================================================================
+
+-- Table club_schedules
+CREATE TABLE club_schedules (
+    club_schedule_id           SERIAL PRIMARY KEY,
+    club_schedule_day_of_week  SMALLINT NOT NULL,
+    club_schedule_start_time   TIME NOT NULL,
+    club_schedule_end_time     TIME NOT NULL,
+    club_schedule_notes        VARCHAR(255),
+    club_id                    INTEGER NOT NULL,
+
+    CONSTRAINT fk_club_schedules_club
+        FOREIGN KEY (club_id) REFERENCES clubs(club_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+
+    CONSTRAINT chk_club_schedules_day CHECK (club_schedule_day_of_week BETWEEN 0 AND 6),
+    CONSTRAINT chk_club_schedules_time CHECK (club_schedule_end_time > club_schedule_start_time)
+);
+
+CREATE INDEX idx_club_schedules_club_id ON club_schedules(club_id);
+
+-- Table techniques_dan_relevance
+CREATE TABLE techniques_dan_relevance (
+    technique_id INTEGER NOT NULL,
+    dan_grade_id INTEGER NOT NULL,
+
+    CONSTRAINT pk_techniques_dan_relevance PRIMARY KEY (technique_id, dan_grade_id),
+
+    CONSTRAINT fk_techdan_technique
+        FOREIGN KEY (technique_id) REFERENCES techniques(technique_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_techdan_dan_grade
+        FOREIGN KEY (dan_grade_id) REFERENCES dan_grades(dan_grade_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_techdan_technique_id ON techniques_dan_relevance(technique_id);
+CREATE INDEX idx_techdan_dan_grade_id ON techniques_dan_relevance(dan_grade_id);
+
+-- Table attack_forms_dan_relevance
+CREATE TABLE attack_forms_dan_relevance (
+    attack_form_id INTEGER NOT NULL,
+    dan_grade_id INTEGER NOT NULL,
+
+    CONSTRAINT pk_attack_forms_dan_relevance PRIMARY KEY (attack_form_id, dan_grade_id),
+
+    CONSTRAINT fk_attackdan_attack_form
+        FOREIGN KEY (attack_form_id) REFERENCES attack_forms(attack_form_id)
+        ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_attackdan_dan_grade
+        FOREIGN KEY (dan_grade_id) REFERENCES dan_grades(dan_grade_id)
+        ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE INDEX idx_attackdan_attack_form_id ON attack_forms_dan_relevance(attack_form_id);
+CREATE INDEX idx_attackdan_dan_grade_id ON attack_forms_dan_relevance(dan_grade_id);
+
+-- =============================================================================
+-- FIN DU SCRIPT
+-- =============================================================================

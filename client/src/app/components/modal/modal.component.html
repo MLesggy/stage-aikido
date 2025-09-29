@@ -1,0 +1,9 @@
+<div *ngIf="modalService.isOpen()" class="modal-backdrop" 
+     (click)="modalService.isTopModal() ? modalService.close() : null">
+  <div class="modal-box" (click)="$event.stopPropagation()">
+    <h3>{{ modalService.title() }}</h3>
+    <ng-container [ngTemplateOutlet]="modalService.content()" 
+                  [ngTemplateOutletContext]="modalService.context()">
+    </ng-container>
+  </div>
+</div>

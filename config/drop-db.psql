@@ -1,0 +1,8 @@
+-- Déconnecter tous les utilisateurs actuellement connectés à la base de données
+SELECT pg_terminate_backend(pg_stat_activity.pid)
+FROM pg_stat_activity
+WHERE pg_stat_activity.datname = 'stage-aikido'
+AND pid <> pg_backend_pid();
+
+-- Supprimer la base de données
+DROP DATABASE IF EXISTS "stage-aikido";

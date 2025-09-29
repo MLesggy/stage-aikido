@@ -1,0 +1,46 @@
+@if(authService.isLoggedOut()){
+    <a id="return" (click)="navigateTo('')">Retour</a>
+
+    <div id="connection-frame">
+        <h1>Connexion</h1>
+
+        <form [formGroup]="loginForm">
+            <mat-form-field appearance="fill">
+                <!-- &#64; remplace le @ car Angular interprète le @ comme le début d'un décorateur par exemple -->
+                <mat-label>Email : (exemple&#64;email.com)</mat-label>
+                <input matInput formControlName="email" type="email" required>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill">
+                <mat-label>Mot de Passe :</mat-label>
+                <input matInput formControlName="password" type="password" required>
+            </mat-form-field>
+
+            <br>
+            <div id="underline">
+
+                <a (click)="openModal()"> Mot de Passe Oublié</a>
+
+                <button mat-raised-button color="primary" (click)="login()" type="button">Connexion</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Template de la modal qui s'ouvre lors de l'interaction avec le lien mot de passe oublié -->
+    <ng-template #PasswordRecoveryTemplate>
+  <form [formGroup]="passwordRecoveryForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="email">Veuillez saisir votre adresse mail:</label>
+      <input id="email" formControlName="email">
+    </div>
+    
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button mat-raised-button color="primary" type="submit" (click)="closeModal()">Envoyer</button>
+    </div>
+  </form>
+</ng-template>
+
+<app-modal></app-modal>
+
+}

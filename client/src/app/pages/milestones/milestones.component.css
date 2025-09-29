@@ -1,0 +1,54 @@
+.milestones-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 5vw;
+    padding-right: 5vw;
+    gap: 5vh;
+}
+
+.milestone-container-student {
+    display: flex;
+    padding: 50px;
+    border: 1px solid gray;
+    box-shadow: 10px 10px 5px gray;
+    background-color: white;
+}
+
+.milestone-container-normal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5vh;
+}
+
+.student-image, .normal-image {
+
+    border: 2px gray solid;
+    object-fit: cover;
+}
+
+.student-image {
+    border-radius: 15px;
+    width: 70%;
+    height: 100%;
+}
+
+.normal-image {
+    border-radius: 15px;
+    width: 90vw;
+    height: 400px;
+}
+
+.half {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+p {
+    white-space: pre-line;
+    text-align: center;
+}

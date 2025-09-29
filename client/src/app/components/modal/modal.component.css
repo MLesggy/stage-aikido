@@ -1,0 +1,92 @@
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: white;
+  padding: 20px;
+  border-radius: 5px;
+  min-width: 800px;
+  max-width: 90%;
+}
+
+.close-btn {
+  margin-top: 15px;
+  float: right;
+  padding: 8px 15px;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Styles pour le formulaire à l'intérieur */
+:host ::ng-deep form {
+  width: 100%;
+}
+
+h3 {
+  text-align: center;
+}
+
+:host ::ng-deep form div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 5px 0;
+}
+
+:host ::ng-deep form label {
+  flex: 0 0 30%;
+  text-align: left;
+  font-weight: bold;
+}
+
+:host ::ng-deep form input,
+:host ::ng-deep form select,
+:host ::ng-deep form textarea{
+  flex: 0 0 65%;
+  padding: 8px;
+  border: 1px solid gray;
+  border-radius: 4px;
+  width: 100%; /* Rajouter ces trois lignes pour fixer la taille des select/options */
+  box-sizing: border-box;
+  background-color: white;
+}
+
+:host ::ng-deep form button[type="submit"] {
+  padding: 8px 15px;
+  background-color: #8B0C0C;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+:host ::ng-deep form button[type="cancel"] {
+  padding: 8px 15px;
+  background-color: #6a6668;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+:host ::ng-deep .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}

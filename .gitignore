@@ -1,0 +1,23 @@
+# Environment variables
+server/.env
+server/.env.*
+private_key.pem
+public_key.pem
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Build directories
+dist/
+build/
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo

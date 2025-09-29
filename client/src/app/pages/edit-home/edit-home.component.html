@@ -1,0 +1,79 @@
+@if (this.authService.isLoggedIn() && this.content){
+    <h1>Modifications pour la page d'Accueil</h1>
+
+
+
+   <form class="flex-column" [formGroup]="editHome" (ngSubmit)="onSubmit()">
+  <table>
+    <tr>
+      <td><label for="id">Id :</label></td>
+      <td><input type="text" formControlName="id" value="{{ content[0].home_data_id }}"></td>
+    </tr>
+
+    <tr>
+      <td><label for="title">Titre :</label></td>
+      <td><input type="text" formControlName="title" value="{{ content[0].home_data_title }}"></td>
+    </tr>
+
+    <tr>
+      <td><label for="subtitle">Sous-titre :</label></td>
+      <td><input type="text" formControlName="subtitle" value="{{ content[0].home_data_subtitle }}"></td>
+    </tr>
+
+    <tr>
+      <td><label for="image">Image :</label></td>
+      <td>
+        <button type="button" (click)="openImageModal()">Ajouter une image</button>
+
+        <select id="image" formControlName="image">
+          <option selected>Choisir une image</option>
+          @for (image of images; track image.image_id) {
+            <option>
+              {{ image.image_name }}
+            </option>
+          }
+        </select>
+      </td>
+    </tr>
+
+    <tr >
+      <td><label for="video">Vidéo :</label></td>
+      <td><input type="text" formControlName="video" value="{{ content[0].home_data_video_url }}"></td>
+    </tr>
+
+    <tr>
+      <td colspan="2" class="center">
+        <button class="color-button" type="submit">Enregistrer</button>
+      </td>
+    </tr>
+  </table>
+</form>
+}
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #imageFormTemplate>
+  <form [formGroup]="imageForm" (ngSubmit)="onImageSubmit()"> <!--   <form [formGroup]="imageForm" (ngSubmit)="onImageSubmit()"> -->
+      <div>
+        <label for="image-id">image ID:</label>
+        <input id="image-id" formControlName="image_id">
+      </div>
+
+    <div>
+      <label for="image-description">Description:</label>
+      <input id="image-description" formControlName="image_description">
+    </div>    
+
+    <div>
+        <label for="image-blob">Image:</label>
+        <input type="file" id="image-blob" (change)="onImageSelected($event)" accept="image/*">
+    </div>
+
+    <div>
+      <button type="button" (click)="this.modalService.close()">Annuler</button>
+      <button type="submit" >Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

@@ -1,0 +1,75 @@
+@if (this.techniques){
+    <h1>Espace élèves</h1>
+    <h2>Liste des techniques par grades</h2>
+    <p>Le catalogue ci-dessous est un outil de mémorisation à destination de mes élèves. Le choix quant au contenu, aux formes et à la progression est personnel.</p>
+
+
+    <div id="selection-container">
+        <h3>Selection</h3>
+
+        <div id="filters-container">
+            <div>
+                <label>
+                    <input type="checkbox" [(ngModel)]="showOfficialHighlight" />
+                    <span>Techniques de la liste officielles des interrogations de shodan à yodan(CSDGE)<span class="red"> [en rouge]</span></span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" (click)="setDanGrade(1)" />
+                    <span>Technique et attaques shodan (CSDGE) <span class="red">[1]</span></span>
+                </label>
+                <label>
+                    <input type="checkbox" (click)="setDanGrade(2)" />
+                    <span>Technique et attaques nidan (CSDGE) <span class="red">[2]</span></span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <input type="checkbox" (click)="setDanGrade(3)" />
+                    <span>Technique et attaques sandan (CSDGE) <span class="red"> [3]</span></span>
+                </label>
+                <label>
+                    <input type="checkbox" (click)="setDanGrade(4)" />
+                    <span>Technique et attaques yondan (CSDGE) <span class="red">[4]</span></span>
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="kuys-container">
+        @for(kuy of grades; track kuy.grade_id){
+            <button (click)="toggleTable(kuy.grade_id, kuy.grade_name)" class="toggle-table" id="toggle-button-{{kuy.grade_id}}">Masquer le {{kuy.grade_name}} ▼</button>
+
+            <div id="kuy-container-{{kuy.grade_id}}">
+                <mat-grid-list cols="3" rowHeight="100px">
+                    @for (workForm of getWorkFormsForKuy(kuy.grade_id); track workForm) {
+                        <mat-grid-tile rowspan="{{getTotalRowsForWorkForm(kuy.grade_id, workForm)}}" class="titleBackground">{{ workForm }}</mat-grid-tile>
+
+                        @for (attackForm of getAttackFormsForKuy(kuy.grade_id, workForm); track attackForm) {
+                            <mat-grid-tile rowspan="{{getMovesForKuy(kuy.grade_id, workForm, attackForm).length}}">{{attackForm}}</mat-grid-tile>
+                            
+                            <mat-grid-tile rowspan="{{getMovesForKuy(kuy.grade_id, workForm, attackForm).length}}">
+                                <ul>
+                                    @for (technique of getMovesForKuy(kuy.grade_id, workForm, attackForm); track technique.technique_id) {
+                                        <li [ngClass]="{ 'red': isOfficial(technique) }">
+                                            <a [href]="technique.technique_link" target="_blank">{{ technique.technique_move }}</a>
+
+                                            @for(dan of technique.dan_grade_ids; track dan; let i = $index){
+                                                @if(danGradeIndex[dan] == true){
+                                                    <span class="red"> [{{dan}}]</span>
+                                                }
+                                            }
+                                        </li>
+                                    }
+                                </ul>
+                            </mat-grid-tile>
+                        }
+                    }
+                </mat-grid-list>
+            </div>
+        }
+    </div>
+}

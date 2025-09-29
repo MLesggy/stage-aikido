@@ -1,0 +1,9 @@
+#map {
+    height: 33vh; 
+    width: 100%
+}
+
+.leaflet-marker-icon {
+  outline: none !important;
+  box-shadow: none !important;
+}

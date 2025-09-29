@@ -1,0 +1,61 @@
+<h1>Parcours</h1>
+
+@if (milestones && divRelevances && milestones.length > 0 && divRelevances.length > 0) {
+    @for(milestone of milestones; track milestone.milestone_id) {
+        <h2>{{milestone.milestone_title}}</h2>
+        <div class="milestones-container">
+            @if(milestone.milestone_style === 'quinconce') {
+                <!-- Display content for this milestone -->
+                @for(divRelevance of getDivRelevancesForMilestone(milestone.milestone_id); track divRelevance.div_relevance_id; let i = $index) {
+                    <div class="milestone-container-student">
+                        <!-- even iteration -->
+                        @if (i % 2 === 0){
+                            <div class="half">
+                                @if(divRelevance.div_relevance_image) {
+                                    <img [src]="this.imagesService.getImageUrl(divRelevance.div_relevance_image[0].image_id)" [alt]="divRelevance.div_relevance_image[0].image_description || 'Image'" class="student-image">
+                                }
+                            </div>
+                            <div class="half">
+                                @if(divRelevance.div_relevance_story) {
+                                    <div class="story">
+                                        <p>{{divRelevance.div_relevance_story.story_text}}</p>
+                                    </div>
+                                }
+                            </div>
+                        } @else {
+                            <!-- odd iteration -->
+                            <div class="half">
+                                @if(divRelevance.div_relevance_story) {
+                                    <div class="story">
+                                        <p>{{divRelevance.div_relevance_story.story_text}}</p>
+                                    </div>
+                                }
+                            </div>
+                            <div class="half">
+                                @if(divRelevance.div_relevance_image) {
+                                    <img [src]="this.imagesService.getImageUrl(divRelevance.div_relevance_image[0].image_id)" [alt]="divRelevance.div_relevance_image[0].image_description || 'Image'" class="student-image">
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            } @else {
+                <!-- Display content the normal way -->
+                @for(divRelevance of getDivRelevancesForMilestone(milestone.milestone_id); track divRelevance.div_relevance_id) {
+                    <div class="milestone-container-normal">
+                        @if(divRelevance.div_relevance_image) {
+                            <div class="image-container">
+                                <img [src]="this.imagesService.getImageUrl(divRelevance.div_relevance_image[0].image_id)" [alt]="divRelevance.div_relevance_image[0].image_description || 'Image'" class="normal-image">
+                            </div>
+                        }
+                        @if(divRelevance.div_relevance_story) {
+                            <div class="story">
+                                <p>{{divRelevance.div_relevance_story.story_text}}</p>
+                            </div>
+                        }
+                    </div>
+                }
+            }
+        </div>
+    }
+}

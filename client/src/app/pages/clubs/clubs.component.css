@@ -1,0 +1,80 @@
+.flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* main container of all the clubs */
+.clubs-container {
+    display: grid;
+    margin: 0px 25dvw 0px 25dvw;
+    grid-template-columns: 1fr 1fr;
+    gap: 3vw;
+}
+
+.club-container {
+    padding: 10px;
+    box-shadow: 2px 2px 6px 1px rgba(0,0,0,0.75); 
+    height: 900px;
+    overflow: scroll;
+    scrollbar-width: none;
+    background-color: white;
+
+    img {
+        object-fit: cover;
+        width: 100%;
+        height: 30%;
+    }
+
+    h2 {
+        width: 100%;
+        height: 8%;
+    }
+
+    hr {
+        width: 100%;
+    }
+
+    .club-address {
+        text-align: center;
+        align-content: center;
+        height: 10%;
+        width: 100%;
+    }
+
+    .club-schedules-container {
+        width: 100%;
+        height: 20%;
+        gap: 5px;
+        overflow: scroll;
+        scrollbar-width: none;
+    }
+
+    .club-contact {
+        height: 15%;
+        margin-bottom: 5px;
+    }
+
+    .club-links-container {
+        display: flex;
+    }
+
+    .club-link {
+        margin-top: auto;
+        align-self: center; 
+        color:white;
+        background-color:#8B0C0C;
+        padding: 9px;
+        width: 50%;
+        cursor: pointer;
+    }
+
+}

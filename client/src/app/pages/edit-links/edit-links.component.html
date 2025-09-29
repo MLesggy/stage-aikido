@@ -1,0 +1,74 @@
+@if (authService.isLoggedIn() && links && recommendations){
+        <div class="edit-container flex-column">
+            <h1>Modifications pour la page Liens</h1>
+
+            @for (recommendationType of recommendations; track recommendationType) {
+            <table>
+                <thead>
+                    <tr>
+                        <th>{{recommendationType.recommendation_type}}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (link of getLinksByRecommendationId(recommendationType.recommendation_id); track $index; let i
+                    = $index){
+                    <tr>
+                        <td class="line flex">
+                            <span target="_blank">{{ link.link_text }}</span>
+                            <div class="edit-icons flex">
+                                <img class="delete" src="images/icon-delete.png" alt="Icone de suppression"
+                                    (click)="deleteLink(link)">
+                                <img class="modify" src="images/icon-edit.png" alt="Icone de modification"
+                                    (click)="editLink(link)">
+                            </div>
+                        </td>
+                    </tr>
+                    }
+                    <!-- Adding an add line to the table -->
+                    <tr>
+                        <td class="line flex">
+                            <span>Ajouter un lien</span>
+                            <img class="add" src="images/icon-add.png" alt="Icone d'ajout"
+                                (click)="openModal(recommendationType.recommendation_id)">
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+            }
+        </div>
+}
+
+<!-- Template du formulaire qui sera utilisé dans la modal -->
+<ng-template #linkFormTemplate>
+  <form [formGroup]="linkForm" (ngSubmit)="onSubmit()">
+    @if (linkForm.get('link_id')?.value > 0) {
+      <div>
+        <label for="link-id">Link ID:</label>
+        <input id="link-id" formControlName="link_id">
+      </div>
+    }
+    <div>
+      <label for="recommendation-id">Recommendation ID:</label>
+      <input id="recommendation-id" formControlName="recommendation_id">
+    </div>
+    
+    <div>
+      <label for="text">Texte:</label>
+      <input id="text" formControlName="link_text">
+    </div>
+    
+    <div>
+      <label for="url">URL:</label>
+      <input id="url" type="url" formControlName="link_url">
+    </div>
+    
+    <div>
+      <button type="button" (click)="closeModal()">Annuler</button>
+      <button type="submit" [disabled]="linkForm.invalid">Enregistrer</button>
+    </div>
+  </form>
+</ng-template>
+
+<!-- Composant modal qui doit être inclus une seule fois dans la page -->
+<app-modal></app-modal>

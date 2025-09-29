@@ -1,0 +1,13 @@
+@if (this.content && this.image && this.image.image_id != -1){
+  <div class="flex-column">
+    <div id="titre">
+      <h1>{{this.content[0].home_data_title}}</h1>
+      <h2>{{this.content[0].home_data_subtitle}} <br>
+      </h2>
+    </div>
+
+    <img [src]="this.imagesService.getImageUrl(this.image.image_id)" [alt]="this.image.image_description">
+
+    <iframe [src]="sanitizedUrl" frameborder="0" allowfullscreen></iframe>
+  </div>
+}

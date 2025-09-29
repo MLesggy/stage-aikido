@@ -1,0 +1,52 @@
+<!-- if we got clubs and images -->
+@if(clubs && clubs.length > 0){
+
+  <h1> Clubs</h1>
+  
+  <h2> Où me trouver?</h2>
+
+  <!-- main container of all clubs -->
+  <div class="clubs-container">
+    <!-- for each club, add it to the page -->
+    @for(club of clubs; track club.club_id)
+    {
+      <!-- create a container for a club -->
+      <div class="club-container">
+
+        <img [src]="this.imagesService.getImageUrl(club.club_images[0].image_id)">
+        
+        <h2 class="club-name flex">{{club.club_name }}</h2>
+        
+        <hr>
+        
+        <span class="club-address flex">{{this.addressService.getFormatedAddress(club.club_address)}}</span>
+        
+        <div class="club-schedules-container flex-column">
+          @for (schedule of club.club_schedules; track schedule.club_schedule_id){
+            <span class="club-schedule">{{clubSchedulesService.getDayFromNumber(schedule.club_schedule_day_of_week)}} - {{schedule.club_schedule_notes | titlecase}} : {{schedule.club_schedule_start_time}} - {{schedule.club_schedule_end_time}}</span>
+          }
+        </div>
+
+        <div class="club-contact flex-column">
+          <span class="club-contact-name">Contact: {{club.club_contact_name}}</span>
+          @if (club.club_contact_email){
+            <span class="club-contact-email">{{club.club_contact_email}}</span>
+          }
+          @if (club.club_contact_phone){
+            <span class="club-contact-phone">{{club.club_contact_phone}}</span>
+          }
+        </div>
+
+        <div class="club-link-container flex">
+          @if (club.club_links && club.club_links.length > 0){
+            <button class="club-link" (click)="goSite(club.club_links[0].link_url)">{{club.club_links[0].link_text}}</button>
+          } @else {
+            <span>N/A</span>
+          }
+        </div>
+
+
+      </div>
+    }
+  </div>
+}
