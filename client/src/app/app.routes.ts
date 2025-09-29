@@ -21,16 +21,16 @@ import { PasswordRecoveryComponent } from './pages/password-recovery/password-re
 
 export const routes: Routes = [
     // Routes avec header et footer
-    {path: '', component: HomeComponent},
-    {path: 'home', component: HomeComponent},
-    {path: 'clubs', component: ClubsComponent},
-    {path: 'links', component: LinksComponent},
-    {path: 'milestones', component: MilestonesComponent},
-    {path: 'seminar-view/:id', component: SeminarViewComponent},
+    {path: '', component: HomeComponent, title: 'François Pichereau'},
+    {path: 'home', component: HomeComponent, title: 'François Pichereau'},
+    {path: 'clubs', component: ClubsComponent, title: 'Mes clubs'},
+    {path: 'links', component: LinksComponent, title: 'Liens utiles'},
+    {path: 'milestones', component: MilestonesComponent, title: 'Parcours'},
+    {path: 'seminar-view/:id', component: SeminarViewComponent, title: 'Stage'},
     {path: 'reset-password', component: PasswordRecoveryComponent},
-    {path: 'seminars', component: SeminarsComponent},
-    {path: 'techniques', component: TechniquesComponent},
-    {path: 'login', component: LoginComponent},
+    {path: 'seminars', component: SeminarsComponent, title: 'Stages'},
+    {path: 'techniques', component: TechniquesComponent, title: 'Lexique'},
+    {path: 'login', component: LoginComponent, title: 'Connexion'},
     
     // Routes utilisant le layout dashboard
     {
