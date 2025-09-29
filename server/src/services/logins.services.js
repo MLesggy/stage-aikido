@@ -31,7 +31,8 @@ class LoginService {
       }
       
       // Generating JWToken using private key
-      const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../config/keys/private_key.pem'));
+      // const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../config/keys/private_key.pem'));
+      const RSA_PRIVATE_KEY = process.env.PRIVATE_KEY;
 
       // Creating payload with admin informations
       const payload = {

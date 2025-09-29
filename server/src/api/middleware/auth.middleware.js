@@ -4,7 +4,9 @@ const path = require('path');
 
 // Récupérez votre clé secrète 
 
-const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../../config/keys/private_key.pem'));
+// const RSA_PRIVATE_KEY = fs.readFileSync(path.join(__dirname, '../../config/keys/private_key.pem'));
+const RSA_PRIVATE_KEY = process.env.PRIVATE_KEY;
+
 
 const authMiddleware = (req, res, next) => {
   // 1. Récupérer le token du header Authorization

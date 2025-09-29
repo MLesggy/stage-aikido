@@ -11,16 +11,7 @@ pool.connect()
     client.release();
   })
   .catch(err => {
-    console.error('Erreur de connexion à la base de données:');
-    console.error('Message:', err.message);
-    console.error('Code:', err.code);
-    console.error('Configuration utilisée:', {
-      host: config.DATABASE.host,
-      port: config.DATABASE.port,
-      database: config.DATABASE.database,
-      user: config.DATABASE.user,
-      // Mot de passe masqué pour la sécurité
-    });
+    console.error('Erreur de connexion à la base de données:', err.message);
   });
 
 module.exports = {
