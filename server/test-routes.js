@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-// Routes settings default: http://localhost:8000/api/
+// Routes settings default: https://stage-aikido-production.up.railway.app:8080/api/
 const addressAPI = "http://localhost:";
 const portAPI = 8000;
 const suffixAPI = "/api/";
