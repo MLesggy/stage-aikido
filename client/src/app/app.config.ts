@@ -21,7 +21,7 @@ export const appConfig: ApplicationConfig = {
     ),
     {
       provide: 'API_URL',
-      useValue: process.env['NODE_ENV'] === 'production' ? '/api' : 'http://localhost:10000/api',
+      useValue: process.env['NODE_ENV'] === 'production' ? '/api' : 'https://stage-aikido-production.up.railway.app/api',
     },
     { provide: LOCALE_ID, useValue: 'fr-FR' },
     {

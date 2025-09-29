@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class MilestonesService {
 
-  private apiURL = 'http://localhost:8000/api/milestones';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/milestones';
 
   constructor(private http: HttpClient) { }
 

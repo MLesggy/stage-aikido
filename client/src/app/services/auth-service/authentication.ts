@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   login(email: string, password: string): any{
-    return this.http.post<User>('http://localhost:8000/api/login/', {email, password}).pipe(
+    return this.http.post<User>('https://stage-aikido-production.up.railway.app/api/login/', {email, password}).pipe(
       tap(res=> this.setSession(res)),
       shareReplay(1)
     );
@@ -87,24 +87,24 @@ export class AuthService {
 
   //3 step forgotten password
   getResetToken(email: string){
-    return this.http.post('http://localhost:8000/api/passwordReset/request', {email});
+    return this.http.post('https://stage-aikido-production.up.railway.app/api/passwordReset/request', {email});
   }
 
   verifyResetToken(token: string){
-    return this.http.post('http://localhost:8000/api/passwordReset/verify', {token});
+    return this.http.post('https://stage-aikido-production.up.railway.app/api/passwordReset/verify', {token});
   }
 
   setNewPassword(password: string, token: string){
-    return this.http.post('http://localhost:8000/api/passwordReset/reset', {password, token});
+    return this.http.post('https://stage-aikido-production.up.railway.app/api/passwordReset/reset', {password, token});
   }
 
   //password modify
   changePassword(oldPassword: string, newPassword: string, email: string){
-    return this.http.post('http://localhost:8000/api/passwordChange', {oldPassword, newPassword, email});
+    return this.http.post('https://stage-aikido-production.up.railway.app/api/passwordChange', {oldPassword, newPassword, email});
   }
 
   //email modify
   changeEmail(email: string, id: number){
-    return this.http.post('http://localhost:8000/api/emailChange', {email, id});
+    return this.http.post('https://stage-aikido-production.up.railway.app/api/emailChange', {email, id});
   }
 }

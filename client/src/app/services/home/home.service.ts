@@ -7,7 +7,7 @@ import { HttpClient } from "@angular/common/http";
 
 export class HomeService {
 
-  private apiURL = 'http://localhost:8000/api/homeData';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/homeData';
 
   constructor(private http: HttpClient) { }
 

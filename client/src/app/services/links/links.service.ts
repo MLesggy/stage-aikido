@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class LinksService {
-  private apiURL = 'http://localhost:8000/api/links';
-  private apiURL2 = 'http://localhost:8000/api/recommendations';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/links';
+  private apiURL2 = 'https://stage-aikido-production.up.railway.app/api/recommendations';
 
   constructor(private http: HttpClient) {}
 

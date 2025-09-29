@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AttackFormsDanRelevanceService {
-  private apiURL = 'http://localhost:8000/api/attackFormsDanRelevance';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/attackFormsDanRelevance';
 
   constructor(private http : HttpClient){}
 

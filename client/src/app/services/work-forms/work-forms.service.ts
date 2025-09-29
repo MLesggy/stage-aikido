@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class WorkFormsService {
-  private apiURL = 'http://localhost:8000/api/workForms';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/workForms';
 
   constructor(private http : HttpClient){}
 

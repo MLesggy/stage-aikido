@@ -8,12 +8,12 @@ import { Observable } from 'rxjs';
 })
 
 export class ClubService {
-  private apiClub = 'http://localhost:8000/api/clubs';
+  private apiClub = 'https://stage-aikido-production.up.railway.app/api/clubs';
 
   constructor(private http: HttpClient) { }
 
   getClubs() {
-    return this.http.get('http://localhost:8000/api/clubs?include=images,address,schedules,links');
+    return this.http.get('https://stage-aikido-production.up.railway.app/api/clubs?include=images,address,schedules,links');
   }
 
   getClub(clubId: number) {

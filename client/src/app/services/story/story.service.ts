@@ -9,7 +9,7 @@ import { DivRelevance } from '../../models/div-relevance/div-relevance.models';
   providedIn: 'root',
 })
 export class StoryService {
-  private apiURL = 'http://localhost:8000/api/stories';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/stories';
 
   constructor(private http: HttpClient) { }
 

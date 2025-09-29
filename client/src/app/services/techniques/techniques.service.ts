@@ -10,7 +10,7 @@ import { WorkFormsService } from '../work-forms/work-forms.service';
 })
 
 export class TechniquesService {
-  private apiURL = 'http://localhost:8000/api/techniques';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/techniques';
 
   constructor(private http : HttpClient, private attackFormsService: AttackFormsService, private workFormsService: WorkFormsService){}
 

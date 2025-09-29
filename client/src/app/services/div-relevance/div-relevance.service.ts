@@ -10,8 +10,8 @@ import { DivRelevance } from '../../models/div-relevance/div-relevance.models';
 
 export class DivRelevanceService {
 
-  private apiURL = 'http://localhost:8000/api/divRelevance?include=stories,images,milestones';
-  private apiURL2 = 'http://localhost:8000/api/divRelevance';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/divRelevance?include=stories,images,milestones';
+  private apiURL2 = 'https://stage-aikido-production.up.railway.app/api/divRelevance';
 
   constructor(private http: HttpClient) { }
 

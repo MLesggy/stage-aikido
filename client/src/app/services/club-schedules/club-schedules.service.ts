@@ -8,7 +8,7 @@ import { Club } from '../../models/clubs/clubs.models';
   providedIn: 'root'
 })
 export class ClubSchedulesService {
-  private apiURL = 'http://localhost:8000/api/clubs';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/clubs';
 
   constructor(private http: HttpClient) { }
 

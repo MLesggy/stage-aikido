@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class GradesService {
-  private apiURL = 'http://localhost:8000/api/grades';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/grades';
 
   constructor(private http : HttpClient){}
 

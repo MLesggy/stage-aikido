@@ -7,7 +7,7 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class TechniquesDanRelevanceService {
-  private apiURL = 'http://localhost:8000/api/techniquesDanRelevance';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/techniquesDanRelevance';
 
   constructor(private http : HttpClient){}
 

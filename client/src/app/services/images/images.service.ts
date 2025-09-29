@@ -8,7 +8,7 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
   providedIn: 'root'
 })
 export class ImagesService {
-  private readonly apiURL = 'http://localhost:8000/api/images';
+  private readonly apiURL = 'https://stage-aikido-production.up.railway.app/api/images';
   private imageUrls = new Map<number, SafeUrl>();
   private blobCache = new Map<number, Blob>();
 

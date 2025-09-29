@@ -8,7 +8,7 @@ import { HomeContent } from "../../models/home-contents/home-contents.models";
 
 export class EditHomeService {
 
-  private apiURL = 'http://localhost:8000/api/homeData';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/homeData';
 
   constructor(private http: HttpClient) { }
 

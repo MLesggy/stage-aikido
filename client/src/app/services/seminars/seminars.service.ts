@@ -9,9 +9,9 @@ type Coordinates = [number, number]; // Tuple [longitude, latitude]
   providedIn: 'root',
 })
 export class SeminarsService {
-  private apiURLgetAll = 'http://localhost:8000/api/seminars?include=address,images';
-  private apiURLgetOne = 'http://localhost:8000/api/seminars/';
-  private apiURL = 'http://localhost:8000/api/seminars';
+  private apiURLgetAll = 'https://stage-aikido-production.up.railway.app/api/seminars?include=address,images';
+  private apiURLgetOne = 'https://stage-aikido-production.up.railway.app/api/seminars/';
+  private apiURL = 'https://stage-aikido-production.up.railway.app/api/seminars';
 
   public seminarsLocation: Map<number, Coordinates> = new Map<
     number,
@@ -40,7 +40,7 @@ export class SeminarsService {
   }
 
   getSeminarsWithoutImages() {
-    return this.http.get('http://localhost:8000/api/seminars?include=address');
+    return this.http.get('https://stage-aikido-production.up.railway.app/api/seminars?include=address');
   }
 
   getSeminar(id: number) {
