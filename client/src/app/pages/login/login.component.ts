@@ -94,4 +94,6 @@ export class LoginComponent {
     }
     this.closeModal();
   }
+
+
 }
