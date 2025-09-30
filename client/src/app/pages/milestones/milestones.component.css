@@ -52,3 +52,9 @@ p {
     white-space: pre-line;
     text-align: center;
 }
+
+@media screen and (max-width: 768px) {
+    .half:has(.student-image) {
+        display: none;
+    }
+} 
