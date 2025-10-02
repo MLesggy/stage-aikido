@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth-service/authentication';
 import { HomeService } from '../../services/home/home.service';
 import { ImagesService } from '../../services/images/images.service';
 import { HomeContent } from '../../models/home-contents/home-contents.models';
-import { Image } from '../../models/images/images.models';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { register } from 'swiper/element/bundle';
@@ -17,37 +16,55 @@ register();
   styleUrl: './home.component.css',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   content!: HomeContent[];
-  image!: Image;
   currentContent: HomeContent = new HomeContent();
-  sanitizedUrl!: SafeResourceUrl;
-  
+
+  slides = [
+    { type: 'image', src: 'images/francki.jpg' },
+    { type: 'image', src: 'images/2.jpg' }
+  ];
+
+  videos =[
+    { type: 'video', src: 'images/budo1.mp4' }
+  ]
 
   constructor(
     public authService: AuthService,
     public homeService: HomeService,
     public imagesService: ImagesService,
-    private sanitizer: DomSanitizer
   ) { }
 
   ngOnInit(): void {
     this.getHomeData();
   }
 
- slides = [
-    { type: 'image', src: 'images/francki.jpg' },
-    { type: 'image', src: 'images/2.jpg' }
-    // { type: 'image', src: 'assets/images/slide3.jpg' }
-  ];
-  videos =[
- { type: 'video', src: 'images/budo1.mp4' }
-  ]
+  ngAfterViewInit() {
+    this.tryPlayVideo();
+  }
 
+  private tryPlayVideo(attempts: number = 0, maxAttempts: number = 20) {
+    const firstVideo = document.querySelector('#swiper-video video') as HTMLVideoElement;
+    
+    if (!firstVideo && attempts < maxAttempts) {
+      setTimeout(() => this.tryPlayVideo(attempts + 1, maxAttempts), 100);
+      return;
+    }
+    
+    if (firstVideo) {
+      firstVideo.muted = true;
+      firstVideo.play().catch(() => {});
+    }
+  }
 
-
-  getSafeUrl() {
-    this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.content[0].home_data_video_url);
+  onSlideChange(event: any) {
+    const swiper = event.target.swiper;
+    const videos = swiper.slides[swiper.activeIndex]?.querySelectorAll('video');
+    
+    videos?.forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+      video.play().catch(() => {});
+    });
   }
 
   getHomeData() {
@@ -57,22 +74,6 @@ export class HomeComponent implements OnInit {
         this.content = contentData.map(content => Object.assign(new HomeContent(), content));
       } else {
         this.content = [Object.assign(new HomeContent(), contentData)];
-      }
-
-      this.getSafeUrl(); // Appel synchronne OK
-
-      // Chargement de l'image (asynchrone)
-      if (this.content[0]?.image_id) {
-        this.imagesService.getSingleImage(this.content[0].image_id).subscribe({
-          next: (response: Image | Image[]) => {
-            const imageData = Array.isArray(response) ? response[0] : response;
-            
-            if (imageData) {
-              this.image = Object.assign(new Image(), imageData);
-              this.imagesService.processImage(this.image); // On appelle processImage ICI
-            }
-          }
-        });
       }
     });
   }

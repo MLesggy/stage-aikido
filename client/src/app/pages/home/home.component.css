@@ -5,23 +5,12 @@
     gap: 2dvh;
 }
 
-img {
-    width: 35%;
-    height: auto;
-}
-
-iframe {
-    width: 50dvw;
-    height: 33dvw;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-#swiper-image{
+#swiper-image {
   width: 100%;
   height: 500px;
 }
-#swiper-video{
+
+#swiper-video {
   width: 500px;
   height: 890px;
 }
@@ -31,7 +20,8 @@ swiper-slide img {
   height: 100%;
   object-fit: cover;
 }
-swiper-slide video{
+
+swiper-slide video {
     width: 100%;
     height: 100%;
     object-fit: cover;
