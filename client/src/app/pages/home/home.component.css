@@ -16,3 +16,23 @@ iframe {
     margin-top: 20px;
     margin-bottom: 20px;
 }
+
+#swiper-image{
+  width: 100%;
+  height: 500px;
+}
+#swiper-video{
+  width: 500px;
+  height: 890px;
+}
+
+swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+swiper-slide video{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

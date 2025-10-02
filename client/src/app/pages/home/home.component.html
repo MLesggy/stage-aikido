@@ -1,3 +1,20 @@
+
+
+
+<swiper-container id="swiper-image"
+  navigation="true" 
+  pagination="true"
+  zoom="none"
+  effect="cube"
+  loop="true">
+  @for (slide of slides; track $index) {
+    <swiper-slide>
+        <img [src]="slide.src">  
+    </swiper-slide>
+  }
+</swiper-container>
+
+
 @if (this.content && this.image && this.image.image_id != -1){
   <div class="flex-column">
     <div id="titre">
@@ -6,8 +23,21 @@
       </h2>
     </div>
 
-    <img [src]="this.imagesService.getImageUrl(this.image.image_id)" [alt]="this.image.image_description">
 
-    <iframe [src]="sanitizedUrl" frameborder="0" allowfullscreen></iframe>
+    <swiper-container id="swiper-video"
+  navigation="true" 
+  pagination="true"
+  zoom="none"
+  effect="cube"
+  loop="true">
+  @for (video of videos; track $index) {
+    <swiper-slide>
+        <video [src]="video.src" autoplay loop muted></video>   
+    </swiper-slide>
+  }
+</swiper-container>
+    <!-- <img [src]="this.imagesService.getImageUrl(this.image.image_id)" [alt]="this.image.image_description">
+
+    <iframe [src]="sanitizedUrl" frameborder="0" allowfullscreen></iframe> -->
   </div>
 }

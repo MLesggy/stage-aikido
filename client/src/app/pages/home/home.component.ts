@@ -5,18 +5,24 @@ import { ImagesService } from '../../services/images/images.service';
 import { HomeContent } from '../../models/home-contents/home-contents.models';
 import { Image } from '../../models/images/images.models';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { register } from 'swiper/element/bundle';
+
+register(); 
 
 @Component({
   selector: 'app-home',
   imports: [],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css',
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class HomeComponent implements OnInit {
   content!: HomeContent[];
   image!: Image;
   currentContent: HomeContent = new HomeContent();
   sanitizedUrl!: SafeResourceUrl;
+  
 
   constructor(
     public authService: AuthService,
@@ -28,6 +34,17 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.getHomeData();
   }
+
+ slides = [
+    { type: 'image', src: 'images/francki.jpg' },
+    { type: 'image', src: 'images/2.jpg' }
+    // { type: 'image', src: 'assets/images/slide3.jpg' }
+  ];
+  videos =[
+ { type: 'video', src: 'images/budo1.mp4' }
+  ]
+
+
 
   getSafeUrl() {
     this.sanitizedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.content[0].home_data_video_url);
