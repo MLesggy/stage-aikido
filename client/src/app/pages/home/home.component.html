@@ -1,7 +1,7 @@
-<swiper-container id="swiper-image" navigation="true" pagination="true" loop="true" preload="auto">
+<swiper-container id="swiper-image" init="false">
   @for (slide of slides; track $index) {
   <swiper-slide>
-    <img [src]="slide.src">
+    <img [src]="slide.src" preload="auto">
   </swiper-slide>
   }
 </swiper-container>
