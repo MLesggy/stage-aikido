@@ -3,9 +3,10 @@ import { AuthService } from '../../services/auth-service/authentication';
 import { HomeService } from '../../services/home/home.service';
 import { ImagesService } from '../../services/images/images.service';
 import { HomeContent } from '../../models/home-contents/home-contents.models';
-import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { register } from 'swiper/element/bundle';
+
+
 
 register(); 
 
@@ -19,14 +20,22 @@ register();
 export class HomeComponent implements OnInit, AfterViewInit {
   content!: HomeContent[];
   currentContent: HomeContent = new HomeContent();
-
   slides = [
-    { type: 'image', src: 'images/francki.jpg' },
-    { type: 'image', src: 'images/2.jpg' }
+    { type: 'image', src: 'images/carousel/francki.jpg' },
+    { type: 'image', src: 'images/carousel/3.jpg' },
+    { type: 'image', src: 'images/carousel/4.jpg' },
+    { type: 'image', src: 'images/carousel/5.jpg' },
+    { type: 'image', src: 'images/carousel/7.jpg' },
+    { type: 'image', src: 'images/carousel/8.jpg' }
   ];
 
   videos =[
-    { type: 'video', src: 'images/budo1.mp4' }
+    { type: 'video', src: 'videos/budo1.mp4' },
+    { type: 'video', src: 'videos/budo2.mp4' },
+    { type: 'video', src: 'videos/budo3.mp4' },
+    { type: 'video', src: 'videos/budo4.mp4' },
+    { type: 'video', src: 'videos/budo5.mp4' },
+    { type: 'video', src: 'videos/budo7.mp4' },
   ]
 
   constructor(
@@ -39,9 +48,42 @@ export class HomeComponent implements OnInit, AfterViewInit {
     this.getHomeData();
   }
 
-  ngAfterViewInit() {
-    this.tryPlayVideo();
+ngAfterViewInit() {
+  const swiperEl = document.querySelector('#swiper-video') as any;
+  
+  if (swiperEl) {
+    Object.assign(swiperEl, {
+      slidesPerView: 1,
+      navigation: true,
+      pagination: true,
+      loop: true
+    });
+    
+    swiperEl.initialize();
+    
+    swiperEl.swiper.on('slideChange', () => {
+      const videos = document.querySelectorAll('#swiper-video video') as NodeListOf<HTMLVideoElement>;
+      videos.forEach(v => {
+        v.pause();
+        v.currentTime = 0;
+      });
+      
+      const activeSlide = swiperEl.swiper.slides[swiperEl.swiper.activeIndex];
+      const activeVideo = activeSlide?.querySelector('video') as HTMLVideoElement;
+      
+      if (activeVideo) {
+        activeVideo.muted = true;
+        activeVideo.play();
+      }
+    });
   }
+  
+  const firstVideo = document.querySelector('#swiper-video video') as HTMLVideoElement;
+  if (firstVideo) {
+    firstVideo.muted = true;
+    firstVideo.play();
+  }
+}
 
   private tryPlayVideo(attempts: number = 0, maxAttempts: number = 20) {
     const firstVideo = document.querySelector('#swiper-video video') as HTMLVideoElement;
@@ -57,15 +99,18 @@ export class HomeComponent implements OnInit, AfterViewInit {
     }
   }
 
-  onSlideChange(event: any) {
-    const swiper = event.target.swiper;
-    const videos = swiper.slides[swiper.activeIndex]?.querySelectorAll('video');
-    
-    videos?.forEach((video: HTMLVideoElement) => {
-      video.muted = true;
-      video.play().catch(() => {});
-    });
-  }
+// onSlideChange(event: any) {
+//   const swiper = event.target.swiper;
+//   const realIndex = swiper.realIndex;
+//   const activeSlide = swiper.slides[swiper.activeIndex];
+//   const video = activeSlide?.querySelector('video') as HTMLVideoElement;
+
+//   if (video) {
+//     video.muted = true;
+//     video.currentTime = 0;
+//     video.play().catch(() => {});
+//   }
+// }
 
   getHomeData() {
     this.homeService.getContent().subscribe((contentData: any) => {
@@ -77,5 +122,6 @@ export class HomeComponent implements OnInit, AfterViewInit {
       }
     });
   }
+
 
 }

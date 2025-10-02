@@ -1,4 +1,4 @@
-<swiper-container id="swiper-image" navigation="true" pagination="true">
+<swiper-container id="swiper-image" navigation="true" pagination="true" loop="true" preload="auto">
   @for (slide of slides; track $index) {
   <swiper-slide>
     <img [src]="slide.src">
@@ -16,10 +16,10 @@
 </div>
 }
 
-<swiper-container id="swiper-video" navigation="true" pagination="true" (slidechange)="onSlideChange($event)">
+<swiper-container id="swiper-video" init="false">
   @for (video of videos; track $index) {
   <swiper-slide>
-    <video [src]="video.src" muted loop playsinline></video>
+    <video [src]="video.src" muted loop playsinline preload="auto"></video>
   </swiper-slide>
   }
 </swiper-container>
