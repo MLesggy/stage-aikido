@@ -46,6 +46,7 @@
         gap: 2dvw;
         padding: 2px;
         margin-bottom: 20px;
+        scrollbar-width: none;
         overflow: scroll;
     }
 
