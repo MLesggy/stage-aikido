@@ -50,4 +50,17 @@
     border-radius: 15px;
     border: 2px solid #8B0C0C;
     resize: none;
+    color: black;
+    padding: 5px;
+}
+
+@media screen and (max-width: 768px) {
+    .seminar-container {
+        flex-direction: column;
+        height: auto;
+    }
+
+    .left {
+        height: 50%;
+    }
 }

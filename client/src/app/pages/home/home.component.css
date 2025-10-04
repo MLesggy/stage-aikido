@@ -5,14 +5,35 @@
     gap: 2dvh;
 }
 
-img {
-    width: 35%;
-    height: auto;
+/* Images */
+
+#swiper-image {
+  width: 96%;
+  height: 600px;
+  margin: 2% auto;
 }
 
-iframe {
-    width: 50dvw;
-    height: 33dvw;
-    margin-top: 20px;
-    margin-bottom: 20px;
+swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
+/* Videos */
+
+#swiper-video {
+  width: 96%;
+  height: 60dvh;
+  margin: 2% auto;
+}
+
+#swiper-video swiper-slide {
+  width: 500px;
+}
+
+swiper-slide video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+

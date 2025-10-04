@@ -1,13 +1,25 @@
-@if (this.content && this.image && this.image.image_id != -1){
-  <div class="flex-column">
-    <div id="titre">
-      <h1>{{this.content[0].home_data_title}}</h1>
-      <h2>{{this.content[0].home_data_subtitle}} <br>
-      </h2>
-    </div>
+<swiper-container id="swiper-image" init="false">
+  @for (slide of slides; track $index) {
+  <swiper-slide>
+    <img [src]="slide.src" preload="auto">
+  </swiper-slide>
+  }
+</swiper-container>
 
-    <img [src]="this.imagesService.getImageUrl(this.image.image_id)" [alt]="this.image.image_description">
-
-    <iframe [src]="sanitizedUrl" frameborder="0" allowfullscreen></iframe>
+@if (this.content){
+<div class="flex-column">
+  <div id="titre">
+    <h1>{{this.content[0].home_data_title}}</h1>
+    <h2>{{this.content[0].home_data_subtitle}} <br>
+    </h2>
   </div>
+</div>
 }
+
+<swiper-container id="swiper-video" init="false">
+  @for (video of videos; track $index) {
+  <swiper-slide>
+    <video [src]="video.src" muted loop playsinline preload="auto"></video>
+  </swiper-slide>
+  }
+</swiper-container>
