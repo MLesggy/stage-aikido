@@ -36,4 +36,25 @@ swiper-slide video {
   height: 100%;
   object-fit: contain;
 }
+#swiper-image::part(button-next),
+#swiper-image::part(button-prev),
+#swiper-video::part(button-next),
+#swiper-video::part(button-prev) {
+  color: #8B0C0C;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
 
+#swiper-image::part(button-next):hover,
+#swiper-image::part(button-prev):hover,
+#swiper-video::part(button-next):hover,
+#swiper-video::part(button-prev):hover {
+  transform: scale(1.2);
+  opacity: 1;
+}
+#swiper-image::part(bullet-active), 
+#swiper-video::part(bullet-active) {
+  background-color: #8B0C0C;
+}
