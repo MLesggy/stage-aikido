@@ -10,8 +10,12 @@ button {
   margin: 2dvh 0 2dvh 0;
 }
 
+label{
+  display: block;
+  margin-bottom: 5px;
+}
 .toggle-table {
-  width: 15vw;
+  width: auto;
 }
 
 .red {
