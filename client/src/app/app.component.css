@@ -1,0 +1,52 @@
+*{
+  font-family: "Abel", sans-serif;
+  font-style: normal;
+  font-size: 1rem;
+}
+
+h1{
+  color: #8B0C0C;
+  text-align: center;
+}
+
+h2{
+  text-align: center;
+}
+
+body{
+    margin: 0;
+    background-color: #FFF9EE;
+}
+
+a:hover {
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-color: #8B0C0C;
+    text-decoration-thickness: 3px;
+    cursor: pointer;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+    h1 { font-size: 1.5rem; } /* 24px */
+    h2 { font-size: 1.25rem; } /* 20px */
+    h3 { font-size: 1.125rem; } /* 18px */
+    p, span { font-size: 0.875rem; } /* 14px */
+}
+
+/* Tablette */
+@media (min-width: 769px) and (max-width: 1024px) {
+    h1 { font-size: 2rem; } /* 32px */
+    h2 { font-size: 1.5rem; } /* 24px */
+    h3 { font-size: 1.25rem; } /* 20px */
+    p, span { font-size: 1rem; } /* 16px */
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+    h1 { font-size: 2.5rem; } /* 40px */
+    h2 { font-size: 1.875rem; } /* 30px */
+    h3 { font-size: 1.5rem; } /* 24px */
+    p, span { font-size: 1.125rem; } /* 18px */
+}
+ 
