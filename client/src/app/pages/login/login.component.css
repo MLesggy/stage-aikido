@@ -1,13 +1,15 @@
 h1 {
     text-align: center;
+    font-size: clamp(1.2rem, 4vw, 1.8rem);
 }
 
 #connection-frame {
     background-color: #CAC5C5;
     border-radius: 15px;
     height: auto;
-    width: 60vw;
-    margin: 20vh 20vw;
+    width: 100%;
+    max-width: 360px;
+    margin: 10vh auto;
     box-shadow: -6px 6px 6px rgba(3, 7, 18, 0.20), -25px 25px 24px rgba(3, 7, 18, 0.10);
 
     display: flex;
@@ -16,9 +18,8 @@ h1 {
 }
 
 mat-form-field {
-    width: 80%;
-    height: 10%;
-    margin: 20px;
+    width: 100%;
+    margin: 15px 0;
 }
 
 #underline {
@@ -29,4 +30,45 @@ mat-form-field {
 
 #return {
     margin: 5px;
+}
+/* style du modal */
+.modal-content {
+    width: 95%;         
+    max-width: 360px;   
+    margin: 5vh auto;   
+    padding: 1rem;     
+    box-sizing: border-box;
+    border-radius: 10px;
+    background-color: #fff;
+}
+.short-text {
+  display: none;
+}
+/* CSS responssive */
+@media screen and (max-width: 360px) {
+    #connection-frame {
+        width: 95%; /* garde de l’air sur les côtés */
+        padding: 1rem;
+        margin: 5vh auto;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+
+    #underline {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .modal-content {
+        width: 95%;
+        padding: 0.8rem;
+    }
+  .full-text {
+    display: none;
+  }
+  .short-text {
+    display: inline;
+  }
 }

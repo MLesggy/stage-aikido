@@ -28,10 +28,12 @@
 
     <!-- Template de la modal qui s'ouvre lors de l'interaction avec le lien mot de passe oublié -->
     <ng-template #PasswordRecoveryTemplate>
-  <form [formGroup]="passwordRecoveryForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="passwordRecoveryForm" (ngSubmit)="onSubmit()" class="modal-content">
     <div>
-      <label for="email">Veuillez saisir votre adresse mail:</label>
-      <input id="email" formControlName="email">
+<label for="email">
+  <span class="full-text">Veuillez saisir votre adresse mail</span>
+  <span class="short-text">Mail</span>
+</label>      <input id="email" formControlName="email">
     </div>
     
     <div>
