@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { Seminar } from '../../models/seminars/seminars.models';
 import { SeminarsService } from '../../services/seminars/seminars.service';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -14,6 +14,7 @@ import { AddressService } from '../../services/address/adress.service';
   styleUrl: './seminars.component.css',
 })
 export class SeminarsComponent implements OnInit {
+  screenWidth: number = window.innerWidth;
   seminars!: Seminar[];
   currentMonth: number = new Date().getMonth(); //What's the month ?
   currentYear: number = new Date().getFullYear(); //What's the year ?
@@ -37,4 +38,10 @@ export class SeminarsComponent implements OnInit {
       }
     });
   }
+
+  //On resize
+  @HostListener('window:resize', ['$event'])
+    onResize(event: any) {
+        this.screenWidth = window.innerWidth;
+    }
 }

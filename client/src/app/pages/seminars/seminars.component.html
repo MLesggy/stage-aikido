@@ -1,7 +1,7 @@
 <h1>Stages / Evenements</h1>
 <h2 class="no-color">Stages et événements à venir</h2>
 
-<mat-grid-list cols="3" rowHeight="30vh" gutterSize="30px">
+<mat-grid-list [cols]="screenWidth <= 1024 ? screenWidth <= 768 ? 1 : 2 : 3"  rowHeight="30vh" gutterSize="30px">
     @for (i of [0, 1, 2, 3, 4, 5, 6, 7, 8]; track i){
     <mat-grid-tile>
         <div class="month-container" appAutoScroll [scrollDelay]="150">
